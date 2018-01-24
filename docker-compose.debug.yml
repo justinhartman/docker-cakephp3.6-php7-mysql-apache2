@@ -1,0 +1,10 @@
+version: '2.1'
+
+services:
+  docker-cakephp3-php7-apache2:
+    image: docker-cakephp3-php7-apache2
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
