@@ -15,7 +15,7 @@ ADD apache_default /etc/apache2/sites-available/000-default.conf
 RUN a2enmod rewrite
 
 # Add volumes for MySQL & Apache 2
-VOLUME  ["/etc/mysql", "/var/lib/mysql"]
+VOLUME  ["/etc/mysql", "/var/lib/mysql", "/var/www/html"]
 RUN service mysql restart
 
 EXPOSE 80 3306 
