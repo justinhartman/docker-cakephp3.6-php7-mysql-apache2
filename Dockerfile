@@ -14,8 +14,8 @@ RUN apt-get update && \
 ADD apache_default /etc/apache2/sites-available/000-default.conf
 RUN a2enmod rewrite
 
-# Add volumes for MySQL 
-VOLUME  ["/etc/mysql", "/var/lib/mysql" ]
+# Add volumes for MySQL & Apache 2
+VOLUME  ["/etc/mysql", "/var/lib/mysql"]
 RUN service mysql restart
 
 EXPOSE 80 3306 
@@ -34,5 +34,7 @@ RUN curl -sSL https://getcomposer.org/installer | php \
     && rm -rf /var/lib/apt/lists/*
 
 RUN a2enmod rewrite
+
+WORKDIR /var/www/html
 
 RUN usermod -u 1000 www-data
