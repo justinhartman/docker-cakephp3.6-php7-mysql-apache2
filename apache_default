@@ -8,7 +8,6 @@
         </Directory>
         <Directory /var/www/html>
                 Options Indexes FollowSymLinks MultiViews
-                # To make wordpress .htaccess work
                 AllowOverride FileInfo
                 Order allow,deny
                 allow from all
@@ -34,5 +33,4 @@
 	# Set HTTPS environment variable if we came in over secure
 	#  channel.
 	SetEnvIf x-forwarded-proto https HTTPS=on
-
 </VirtualHost>
