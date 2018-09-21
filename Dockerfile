@@ -13,6 +13,7 @@ RUN apt-get update && \
 # config to enable .htaccess
 ADD apache_default /etc/apache2/sites-available/000-default.conf
 RUN a2enmod rewrite
+RUN service apache2 restart
 
 # Add volumes for MySQL & Apache 2
 VOLUME  ["/etc/mysql", "/var/lib/mysql", "/var/www/html"]
@@ -32,8 +33,6 @@ RUN curl -sSL https://getcomposer.org/installer | php \
     && apt-get install -y zlib1g-dev git \
     && apt-get purge -y --auto-remove zlib1g-dev \
     && rm -rf /var/lib/apt/lists/*
-
-RUN a2enmod rewrite
 
 WORKDIR /var/www/html
 
