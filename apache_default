@@ -2,7 +2,7 @@
     ServerName localhost
     ServerAdmin webmaster@localhost
 
-    DocumentRoot /var/www/cakephp/webroot
+    DocumentRoot /var/www/html/cakephp/webroot
 
     <Directory />
         Options FollowSymLinks
