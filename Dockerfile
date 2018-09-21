@@ -4,12 +4,17 @@ MAINTAINER Justin Hartman <justin@hartman.me>
 ENV DEBIAN_FRONTEND noninteractive
 ENV MYSQL_ROOT_PASS RpgCNfRTBpEyBKdk6D
 
-RUN echo mysql-server mysql-server/root_password password $MYSQL_ROOT_PASS | debconf-set-selections
-RUN echo mysql-server mysql-server/root_password_again password $MYSQL_ROOT_PASS | debconf-set-selections
+RUN echo mysql-server mysql-server/root_password \
+    password $MYSQL_ROOT_PASS | debconf-set-selections
+RUN echo mysql-server mysql-server/root_password_again \
+    password $MYSQL_ROOT_PASS | debconf-set-selections
 
 # Install Apache, MySQL and PHP.
 RUN apt-get update && \
-    apt-get -y install apt-utils git apache2 libapache2-mod-php7.0 mysql-server php7.0-mysql pwgen php7.0-mcrypt php7.0-opcache php7.0 php7.0-cli php7.0-fpm php7.0-gd php7.0-json php7.0-readline php7.0-common php7.0-curl php7.0-mbstring
+    apt-get -y install apt-utils git apache2 libapache2-mod-php7.0 \
+    mysql-server php7.0-mysql pwgen php7.0-mcrypt php7.0-opcache php7.0 \
+    php7.0-cli php7.0-fpm php7.0-gd php7.0-json php7.0-readline php7.0-common \
+    php7.0-curl php7.0-mbstring
 
 # Add volumes for MySQL & Apache 2
 VOLUME  ["/etc/mysql", "/var/lib/mysql", "/var/www/html"]
@@ -19,7 +24,8 @@ RUN service mysql restart
 EXPOSE 80 3306
 
 # Install additional, required PHP modules.
-RUN requirements="libmcrypt-dev g++ libicu-dev libmcrypt4 libicu55 curl php7.0-mcrypt php7.0-intl php7.0-curl" \
+RUN requirements="libmcrypt-dev g++ libicu-dev libmcrypt4 libicu55 curl \
+    php7.0-mcrypt php7.0-intl php7.0-curl" \
     && apt-get update && apt-get install -y $requirements \
     && requirementsToRemove="libmcrypt-dev g++ libicu-dev" \
     && apt-get purge --auto-remove -y $requirementsToRemove \
