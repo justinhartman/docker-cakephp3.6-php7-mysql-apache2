@@ -2,7 +2,7 @@
     ServerName localhost
     ServerAdmin webmaster@localhost
 
-    DocumentRoot /var/www/html
+    DocumentRoot /var/www/cakephp/webroot
 
     <Directory />
         Options FollowSymLinks
@@ -12,7 +12,7 @@
     <Directory /var/www/html>
         Order allow,deny
         Allow from all
-        Options +Indexes +MultiViews
+        Options +Indexes +FollowSymLinks +MultiViews
         AllowOverride all
     </Directory>
 

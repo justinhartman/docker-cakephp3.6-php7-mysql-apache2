@@ -18,7 +18,7 @@ RUN apt-get update && \
     php7.0-mbstring php7.0-mcrypt php7.0-intl
 
 # Add volumes for MySQL & Apache 2
-VOLUME  ["/etc/mysql", "/var/lib/mysql", "/var/www/html"]
+VOLUME  ["/etc/mysql", "/var/lib/mysql", "/var/www/html", "/var/www/cakephp"]
 RUN service mysql restart
 
 # Open ports 80 and 3306. Port 8765 is for CakePHP's development server should
@@ -36,9 +36,6 @@ ADD apache_default /etc/apache2/sites-available/000-default.conf
 # Enable mod_rewrite.
 RUN a2enmod rewrite
 
-# Now we can restart Apache for everything to kick in.
-RUN service apache2 restart
-
 # Setup work directory for composer installation.
 WORKDIR /var/www/composer
 
@@ -51,14 +48,17 @@ RUN curl -sSL https://getcomposer.org/installer | php \
     && rm -rf /var/lib/apt/lists/*
 
 # Setup work directory.
-WORKDIR /var/www/html
+# WORKDIR /var/www/html
 # Install CakePHP 3.6 to the default Apache folder.
-RUN /usr/local/bin/composer create-project --prefer-dist cakephp/app /var/www/html
+RUN /usr/local/bin/composer create-project --prefer-dist cakephp/app /var/www/cakephp
 # Make cake bake executable.
 RUN chmod +x bin/cake
 
 # Apply all the correct permissions.
 RUN usermod -u 1000 www-data
+
+# Now we can restart Apache for everything to kick in.
+RUN service apache2 restart
 
 # Run the development server just in case. You can access this on port 8765.
 # RUN bin/cake server -H 0.0.0.0
