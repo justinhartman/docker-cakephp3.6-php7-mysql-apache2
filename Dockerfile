@@ -2,12 +2,12 @@ FROM ubuntu:xenial
 MAINTAINER Justin Hartman <justin@hartman.me>
 
 ENV DEBIAN_FRONTEND noninteractive
-ENV MYSQL_ROOT_PASS RpgCNfRTBpEyBKdk6D
+ENV MYSQL_ROOT_PASSWORD RpgCNfRTBpEyBKdk6D
 
 RUN echo mysql-server mysql-server/root_password \
-    password $MYSQL_ROOT_PASS | debconf-set-selections
+    password $MYSQL_ROOT_PASSWORD | debconf-set-selections
 RUN echo mysql-server mysql-server/root_password_again \
-    password $MYSQL_ROOT_PASS | debconf-set-selections
+    password $MYSQL_ROOT_PASSWORD | debconf-set-selections
 
 # Install apt-utils first so we avoid errors in Docker build.
 RUN apt-get update && apt-get -y install apt-utils
@@ -21,6 +21,11 @@ RUN apt-get -y install curl zip unzip libicu55 libmcrypt-dev g++ libicu-dev \
 
 # Add volumes for MySQL & Apache 2
 VOLUME  ["/etc/mysql", "/var/lib/mysql", "/var/www/html"]
+
+# Create the CakePHP live and test databases as well as the database users.
+RUN mysql -u root -pRpgCNfRTBpEyBKdk6D < database.sql
+
+# Restart MySQL.
 RUN service mysql restart
 
 # Open ports 80 and 3306. Port 8765 is for CakePHP's development server should
@@ -53,6 +58,12 @@ RUN curl -sSL https://getcomposer.org/installer | php \
 RUN /usr/local/bin/composer create-project --prefer-dist cakephp/app \
     /var/www/html/cakephp
 
+# Copy CakePHP config files to project to enable dotenv and define app defaults
+# which include database connection settings.
+ADD config/app.default.php /var/www/html/cakephp/config/app.default.php
+ADD config/bootstrap.php /var/www/html/cakephp/config/bootstrap.php
+ADD config/env.default /var/www/html/cakephp/config/.env
+
 # Apply all the correct permissions.
 RUN usermod -u 1000 www-data
 
@@ -60,4 +71,5 @@ RUN usermod -u 1000 www-data
 RUN service apache2 restart
 
 # Run the development server just in case. You can access this on port 8765.
-# RUN bin/cake server -H 0.0.0.0
+# I expect the build to fail right here.
+RUN /var/www/html/cakephp/bin/cake server -H 0.0.0.0
