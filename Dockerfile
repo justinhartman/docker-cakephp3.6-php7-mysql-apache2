@@ -26,7 +26,7 @@ EXPOSE 80 3306
 # Install additional, required PHP modules.
 RUN requirements="libmcrypt-dev g++ libicu-dev libmcrypt4 libicu55 curl \
     php7.0-mcrypt php7.0-intl php7.0-curl" \
-    && apt-get update && apt-get install -y $requirements \
+    && apt-get install -y $requirements \
     && requirementsToRemove="libmcrypt-dev g++ libicu-dev" \
     && apt-get purge --auto-remove -y $requirementsToRemove \
     && rm -rf /var/lib/apt/lists/*
@@ -46,7 +46,6 @@ RUN service apache2 restart
 # Install Composer.
 RUN curl -sSL https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer \
-    && apt-get update \
     && apt-get install -y zlib1g-dev git \
     && apt-get purge -y --auto-remove zlib1g-dev \
     && rm -rf /var/lib/apt/lists/*
