@@ -53,9 +53,6 @@ RUN curl -sSL https://getcomposer.org/installer | php \
 RUN /usr/local/bin/composer create-project --prefer-dist cakephp/app \
     /var/www/html/cakephp
 
-# Make cake bake executable.
-RUN chmod +x /var/www/html/cakephp/bin/cake
-
 # Apply all the correct permissions.
 RUN usermod -u 1000 www-data
 
