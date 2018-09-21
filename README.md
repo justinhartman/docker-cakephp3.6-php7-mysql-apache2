@@ -1,6 +1,6 @@
-# CakePHP 3.5 Docker Image Container
+# CakePHP 3.6 Docker Image Container
 A [CakePHP Docker container][docker] that installs Apache 2, PHP 7.0, MySQL and
-CakePHP 3.5.
+CakePHP 3.6.
 
 ## Supported Tags
 
@@ -8,7 +8,7 @@ Currently there is only one supported tag, `latest`, which installs:
  1. Apache 2
  2. PHP 7.0
  3. MySQL 5.7
- 4. CakePHP 3.5
+ 4. CakePHP 3.6
 
 There may be support in the future for additional tags to install different
 software (i.e. Nginx, PHP 5.6, PHP 7.2).
