@@ -53,7 +53,7 @@ RUN curl -sSL https://getcomposer.org/installer | php \
 # Setup work directory.
 WORKDIR /var/www/html
 # Install CakePHP 3.6 to the default Apache folder.
-RUN /usr/local/bin/composer create-project --prefer-dist cakephp/app .
+RUN /usr/local/bin/composer create-project --prefer-dist cakephp/app /var/www/html
 # Make cake bake executable.
 RUN chmod +x bin/cake
 
