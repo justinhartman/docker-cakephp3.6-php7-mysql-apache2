@@ -1,19 +1,18 @@
 <VirtualHost *:80>
-    ServerName localhost
     ServerAdmin webmaster@localhost
 
-    DocumentRoot /var/www/html/cakephp/webroot
+    DocumentRoot /var/www/html
 
     <Directory />
         Options FollowSymLinks
         AllowOverride None
     </Directory>
 
-    <Directory /var/www/html/cakephp/webroot>
+    <Directory /var/www/html>
         Order allow,deny
         Allow from all
         Options +Indexes +FollowSymLinks +MultiViews
-        AllowOverride all
+        AllowOverride FileInfo
     </Directory>
 
     ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/

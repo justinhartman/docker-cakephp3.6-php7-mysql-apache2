@@ -6,6 +6,9 @@ LABEL description="Installs Apache 2, MySQL 5.7, PHP 7.0 and CakePHP 3.6."
 ENV DEBIAN_FRONTEND noninteractive
 ENV MYSQL_ROOT_PASSWORD RpgCNfRTBpEyBKdk6D
 
+# Define ports 80 and 3306.
+EXPOSE 80 3306
+
 # Set the mysql root password.
 RUN echo mysql-server mysql-server/root_password \
     password $MYSQL_ROOT_PASSWORD | debconf-set-selections && \
@@ -22,14 +25,14 @@ RUN apt-get update && apt-get -y install apt-utils && \
     php7.0-mbstring php7.0-mcrypt php7.0-intl php7.0-simplexml
 
 # Add volumes for MySQL & Apache 2
-VOLUME  ["/etc/mysql", "/var/lib/mysql", "/var/www/html"]
+VOLUME  ["/etc/mysql", "/var/lib/mysql", "/etc/apache2", "/var/www/html"]
 
 # Copy core files across.
-COPY --chown=1000:www-data database.sql /var/lib/mysql/database.sql
-COPY --chown=1000:www-data config/app.default.php /var/www/html/config/app.default.php
-COPY --chown=1000:www-data config/bootstrap.php /var/www/html/config/bootstrap.php
-COPY --chown=1000:www-data config/env.default /var/www/html/config/env.default
-COPY --chown=1000:www-data apache_default /etc/apache2/sites-available/000-default.conf
+COPY config/database.sql /etc/mysql/database.sql
+COPY config/apache_default /etc/apache2/sites-available/000-default.conf
+
+# Enable mod_rewrite and set localhost as ServerName.
+RUN a2enmod rewrite && echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 # Remove and purge some previously installed software to save space.
 RUN requirementsToRemove="libmcrypt-dev g++ libicu-dev" \
@@ -40,52 +43,39 @@ RUN requirementsToRemove="libmcrypt-dev g++ libicu-dev" \
 RUN service mysql restart
 
 # Create the CakePHP live and test databases as well as the database users.
-# RUN mysql -u root -pRpgCNfRTBpEyBKdk6D < /var/lib/mysql/database.sql
-
-# Enable mod_rewrite.
-RUN a2enmod rewrite
+# RUN mysql -u root -pRpgCNfRTBpEyBKdk6D < /etc/mysql/database.sql
 
 # Setup work directory for Composer and CakePHP installation.
 WORKDIR /var/www/html
 
 # Install Composer and remove more previously installed software to save space.
 RUN curl -sSL https://getcomposer.org/installer | php \
-    && mv composer.phar /usr/local/bin/composer \
-    && apt-get update \
-    && apt-get install -y zlib1g-dev \
-    && apt-get purge -y --auto-remove zlib1g-dev \
-    && rm -rf /var/lib/apt/lists/*
+    && mv composer.phar /usr/local/bin/composer
+    # && apt-get update \
+    # && apt-get install -y zlib1g-dev \
+    # && apt-get purge -y --auto-remove zlib1g-dev \
+    # && rm -rf /var/lib/apt/lists/*
 
-# Install latest version of CakePHP to the configured Apache Vhost folder. Then,
-# copy CakePHP config files to project to enable dotenv as well as define app
-# defaults which include database connection, cache and email settings.
-RUN composer create-project --prefer-dist cakephp/app /var/www/html/cakephp \
-    && ./cakephp/bin/cake version
+# Install latest version of CakePHP.
+RUN rm -rf /var/www/html \
+    && composer create-project --prefer-dist cakephp/app /var/www/html \
+    && cp config/app.default.php config/app.php && \
+    # Make Session Handler configurable via dotenv
+    && sed -i -e "s/'php',/env('SESSION_DEFAULTS', 'php'),/" config/app.php \
+    # Enable dotenv support.
+    && sed -i "52s/\/\///" config/bootstrap.php \
+    && sed -i "53s/\/\///" config/bootstrap.php \
+    && sed -i "54s/\/\///" config/bootstrap.php \
+    && sed -i "55s/\/\///" config/bootstrap.php \
+    && sed -i "56s/\/\///" config/bootstrap.php \
+    && sed -i "57s/\/\///" config/bootstrap.php \
+    && sed -i "58s/\/\///" config/bootstrap.php
 
-COPY --chown=1000:www-data config/app.default.php cakephp/config/app.default.php
-COPY --chown=1000:www-data config/bootstrap.php cakephp/config/bootstrap.php
-COPY --chown=1000:www-data config/env.default cakephp/config/.env
+# Copy the repos .env file to the project.
+COPY --chown=www-data:www-data config/env.default config/.env
 
 # Apply all the correct permissions and restart Apache.
-RUN usermod -u 1000 www-data && service apache2 restart
-
-# Check CakePHP version.
-# RUN ./cakephp/bin/cake version
-
-# Define ports 80 and 3306. Port 8765 is for CakePHP's development server should
-# you need to use it.
-EXPOSE 80 3306 8765
+RUN usermod -u www-data www-data && service apache2 restart
 
 # Run Apache webserver
 CMD ["/usr/sbin/apache2ctl", "-DFOREGROUND"]
-
-# Now we can restart Apache for everything to kick in.
-# RUN service apache2 restart \
-#     && /bin/sh /var/www/html/cakephp/bin/cake version
-
-# Test to see if Docker can pick up the cake shell script or not.
-# RUN /bin/sh /var/www/html/cakephp/bin/cake version
-
-# Run the development server just in case. You can access this on port 8765.
-# I expect the build to fail right here.
-# RUN /bin/sh /var/www/html/cakephp/bin/cake server -H 0.0.0.0
