@@ -32,7 +32,8 @@ ADD config/env.default /var/www/html/config/env.default
 RUN service mysql restart
 
 # Create the CakePHP live and test databases as well as the database users.
-RUN mysql -u root -pRpgCNfRTBpEyBKdk6D < /var/lib/mysql/database.sql
+# RUN mysql -u root -pRpgCNfRTBpEyBKdk6D < /var/lib/mysql/database.sql
+RUN which mysql
 
 # Open ports 80 and 3306. Port 8765 is for CakePHP's development server should
 # you need to use it.
