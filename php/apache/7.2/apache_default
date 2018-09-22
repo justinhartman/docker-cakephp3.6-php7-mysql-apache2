@@ -1,0 +1,35 @@
+<VirtualHost *:80>
+    ServerAdmin webmaster@localhost
+
+    DocumentRoot /var/www/html
+
+    <Directory />
+        Options FollowSymLinks
+        AllowOverride None
+    </Directory>
+
+    <Directory /var/www/html>
+        Order allow,deny
+        Allow from all
+        Options +Indexes +FollowSymLinks +MultiViews
+        AllowOverride FileInfo
+    </Directory>
+
+    ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
+    <Directory "/usr/lib/cgi-bin">
+        Order allow,deny
+        Allow from all
+        Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+        AllowOverride None
+    </Directory>
+
+    # Possible values are: debug, info, notice, warn, error, crit, alert, emerg.
+    LogLevel warn
+    # Error log locations.
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+	# Set HTTPS environment variable if we came in over secure
+	#  channel.
+	SetEnvIf x-forwarded-proto https HTTPS=on
+</VirtualHost>
