@@ -49,14 +49,10 @@ WORKDIR /var/www/html
 # Install Composer and remove more previously installed software to save space.
 RUN curl -sSL https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer
-    # && apt-get update \
-    # && apt-get install -y zlib1g-dev \
-    # && apt-get purge -y --auto-remove zlib1g-dev \
-    # && rm -rf /var/lib/apt/lists/*
 
 # Install latest version of CakePHP.
-RUN rm -rf /var/www/html \
-    && composer create-project --prefer-dist cakephp/app /var/www/html \
+RUN rm -Rf /var/www/html
+RUN composer create-project --prefer-dist cakephp/app /var/www/html \
     && cp config/app.default.php config/app.php \
     # Make Session Handler configurable via dotenv
     && sed -i -e "s/'php',/env('SESSION_DEFAULTS', 'php'),/" config/app.php \
