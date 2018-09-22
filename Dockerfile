@@ -39,11 +39,9 @@ RUN requirementsToRemove="libmcrypt-dev g++ libicu-dev" \
     && apt-get purge --auto-remove -y $requirementsToRemove \
     && rm -rf /var/lib/apt/lists/*
 
-# Restart MySQL.
-RUN service mysql restart
-
-# Create the CakePHP live and test databases as well as the database users.
-# RUN mysql -u root -pRpgCNfRTBpEyBKdk6D < /etc/mysql/database.sql
+# Restart MySQL. Run database creation script.
+RUN service mysql restart \
+    && mysql -u root -pRpgCNfRTBpEyBKdk6D < /etc/mysql/database.sql
 
 # Setup work directory for Composer and CakePHP installation.
 WORKDIR /var/www/html
@@ -59,7 +57,7 @@ RUN curl -sSL https://getcomposer.org/installer | php \
 # Install latest version of CakePHP.
 RUN rm -rf /var/www/html \
     && composer create-project --prefer-dist cakephp/app /var/www/html \
-    && cp config/app.default.php config/app.php && \
+    && cp config/app.default.php config/app.php \
     # Make Session Handler configurable via dotenv
     && sed -i -e "s/'php',/env('SESSION_DEFAULTS', 'php'),/" config/app.php \
     # Enable dotenv support.
