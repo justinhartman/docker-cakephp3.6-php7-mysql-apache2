@@ -60,7 +60,8 @@ RUN curl -sSL https://getcomposer.org/installer | php \
 # Install latest version of CakePHP to the configured Apache Vhost folder. Then,
 # copy CakePHP config files to project to enable dotenv as well as define app
 # defaults which include database connection, cache and email settings.
-RUN composer create-project --prefer-dist cakephp/app /var/www/html/cakephp
+RUN composer create-project --prefer-dist cakephp/app /var/www/html/cakephp \
+    && ./cakephp/bin/cake version
 
 COPY --chown=1000:www-data config/app.default.php cakephp/config/app.default.php
 COPY --chown=1000:www-data config/bootstrap.php cakephp/config/bootstrap.php
