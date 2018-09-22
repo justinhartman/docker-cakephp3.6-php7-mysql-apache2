@@ -51,7 +51,6 @@ RUN curl -sSL https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer
 
 # Install latest version of CakePHP.
-RUN rm -Rf /var/www/html
 RUN composer create-project --prefer-dist cakephp/app /var/www/html \
     && cp config/app.default.php config/app.php \
     # Make Session Handler configurable via dotenv
