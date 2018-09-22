@@ -38,7 +38,7 @@ RUN requirementsToRemove="libmcrypt-dev g++ libicu-dev" \
 
 # Restart MySQL. Run database creation script.
 # RUN service mysql restart
-RUN mysql -u root -pRpgCNfRTBpEyBKdk6D < /etc/mysql/database.sql
+# RUN mysql -u root -pRpgCNfRTBpEyBKdk6D < /etc/mysql/database.sql
 
 # Setup work directory for Composer and CakePHP installation.
 WORKDIR /var/www/html
