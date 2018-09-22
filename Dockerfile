@@ -22,8 +22,14 @@ RUN apt-get -y install curl zip unzip libicu55 libmcrypt-dev g++ libicu-dev \
 # Add volumes for MySQL & Apache 2
 VOLUME  ["/etc/mysql", "/var/lib/mysql", "/var/www/html"]
 
+# Copy core files across.
+ADD database.sql /var/lib/mysql/database.sql
+ADD config/app.default.php /var/www/html/config/app.default.php
+ADD config/bootstrap.php /var/www/html/config/bootstrap.php
+ADD config/env.default /var/www/html/config/env.default
+
 # Create the CakePHP live and test databases as well as the database users.
-RUN mysql -u root -pRpgCNfRTBpEyBKdk6D < database.sql
+RUN mysql -u root -pRpgCNfRTBpEyBKdk6D < /var/lib/mysql/database.sql
 
 # Restart MySQL.
 RUN service mysql restart
@@ -69,6 +75,9 @@ RUN usermod -u 1000 www-data
 
 # Now we can restart Apache for everything to kick in.
 RUN service apache2 restart
+
+# Change to CakePHP directory
+WORKDIR /var/www/html/cakephp
 
 # Run the development server just in case. You can access this on port 8765.
 # I expect the build to fail right here.
