@@ -1,12 +1,16 @@
 FROM ubuntu:bionic
+LABEL name="cakephp_image"
+LABEL description="A CakePHP Docker Container which installs a fresh, fully \
+configured and operational version of CakePHP 3.6. It comes with two \
+pre-configured databases, for both production and testing environments and the \
+app runs on PHP 7.2, Apache 2.4 and MySQL 5.7."
 LABEL maintainer="Justin Hartman <justin@hartman.me>"
-LABEL description="CakePHP 3.6 running on Apache 2.4 and PHP 7.2."
 
 ################################################################
-# Install packages and setup the configuration.                #
+# Install packages and define any enviroment variables.        #
 ################################################################
 
-# Install packages and PHP 7
+# Install various packages needed for operation.
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update -q && apt-get install -qqy \
     git-core \
@@ -20,37 +24,55 @@ RUN apt-get update -q && apt-get install -qqy \
     php-simplexml \
     php-curl \
     php-codesniffer \
+    # Installs MySQL Server and the PHP extension.
+    mysql-server \
     php-mysql && \
-    # Delete all the apt list files since they're big and get stale quickly
+    # Purge the apt list software to save space.
     rm -rf /var/lib/apt/lists/*
 
-# Add apache config to enable .htaccess and do some stuff you want
+################################################################
+# Setup MySQL by creating prod and testing databases & users.  #
+################################################################
+
+# Copy the sql statments script.
+COPY database.sql /etc/mysql/database.sql
+
+# Start MySQL Server and create the two databases and users.
+RUN service mysql start \
+    && mysql -u root < /etc/mysql/database.sql
+
+################################################################
+# Setup Apache vhost, enable rewrite and define localhost.     #
+################################################################
+
+# Copy default vhost to Apache config folder.
 COPY apache_default /etc/apache2/sites-available/000-default.conf
 
-# Enable mod rewrite and listen to localhost
-RUN a2enmod rewrite && \
-    echo "ServerName localhost" >> /etc/apache2/apache2.conf
+# Enable mod_rewrite and add ServerName directive to Apache conf file.
+RUN a2enmod rewrite \
+    && echo "ServerName localhost" >> /etc/apache2/apache2.conf \
+    && service apache2 restart
 
 ################################################################
 # Deploy a CakePHP 3 Git installation from source.             #
 ################################################################
 
-# Clone your application instead of using composer to create your project.
+# Change the user to run as www-data.
+RUN usermod -u 1000 www-data
+
+# Clone application instead of using composer to create the project.
 RUN rm -rf /var/www/html && \
     git clone https://github.com/cakephp/app.git /var/www/html
 
 # Set Work Dir
 WORKDIR /var/www/html
 
-# Install application using Composer.
+# Post-git installation of application using Composer.
 RUN composer -n install
-
-# Copy the repos .env file to the project.
-COPY --chown=www-data:www-data env.default config/.env
 
 # Copy the app.php file
 RUN cp config/app.default.php config/app.php \
-    # Enable dotenv support.
+    # Enable dotenv support in bootstrap.php.
     && sed -i "52s/\/\///" config/bootstrap.php \
     && sed -i "53s/\/\///" config/bootstrap.php \
     && sed -i "54s/\/\///" config/bootstrap.php \
@@ -59,14 +81,23 @@ RUN cp config/app.default.php config/app.php \
     && sed -i "57s/\/\///" config/bootstrap.php \
     && sed -i "58s/\/\///" config/bootstrap.php \
     # Make Session Handler configurable via dotenv.
-    && sed -i -e "s/'php',/env('SESSION_DEFAULTS', 'php'),/" config/app.php
-    # Set write permissions for webserver
-    chgrp -R www-data logs tmp && \
-    chmod -R g+rw logs tmp
+    && sed -i -e "s/'php',/env('SESSION_DEFAULTS', 'php'),/" config/app.php \
+    # Set owner and write permissions for files and folders.
+    && chown -R www-data:www-data . \
+    && chmod -R +rw logs tmp \
+    # Let Cake change permissions as it needs to.
+    && composer -n install
+
+# Copy the repos .env file, with database connection settings, to the project.
+COPY --chown=www-data:www-data env.default config/.env
 
 ####################################################
-# Expose Volumes & Port and run Apache webserver.  #
+# Run startup script for Apache and MySQL.         #
 ####################################################
-VOLUME  ["/var/www/html"]
-EXPOSE 80
-CMD ["/usr/sbin/apache2ctl", "-DFOREGROUND"]
+
+# Define ports 80 and 3306.
+EXPOSE 80 3306
+
+# Copy and Run the services script which checks and starts MySQL and Apache.
+COPY run_services.sh /usr/local/bin/run_services
+CMD ["run_services"]
