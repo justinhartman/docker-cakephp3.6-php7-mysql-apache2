@@ -1,5 +1,6 @@
 FROM ubuntu:xenial
-LABEL Justin Hartman <justin@hartman.me>
+LABEL maintainer="Justin Hartman <justin@hartman.me>"
+LABEL description="Installs Apache 2, MySQL 5.7, PHP 7.0 and CakePHP 3.6."
 
 # Setup enviroment variables.
 ENV DEBIAN_FRONTEND noninteractive
@@ -24,11 +25,12 @@ RUN apt-get update && apt-get -y install apt-utils && \
 VOLUME  ["/etc/mysql", "/var/lib/mysql", "/var/www/html"]
 
 # Copy core files across.
-COPY database.sql /var/lib/mysql/database.sql
-COPY config/app.default.php /var/www/html/app.default.php
-COPY config/bootstrap.php /var/www/html/bootstrap.php
-COPY config/env.default /var/www/html/env.default
-COPY apache_default /etc/apache2/sites-available/000-default.conf
+COPY --chown=1000:www-data database.sql /var/lib/mysql/database.sql
+# COPY --chown=1000:www-data config/ /var/www/html/config/
+COPY --chown=1000:www-data config/app.default.php /var/www/html/config/app.default.php
+COPY --chown=1000:www-data config/bootstrap.php /var/www/html/config/bootstrap.php
+COPY --chown=1000:www-data config/env.default /var/www/html/config/env.default
+COPY --chown=1000:www-data apache_default /etc/apache2/sites-available/000-default.conf
 
 # Remove and purge some previously installed software to save space.
 RUN requirementsToRemove="libmcrypt-dev g++ libicu-dev" \
@@ -45,7 +47,7 @@ RUN service mysql restart
 RUN a2enmod rewrite
 
 # Setup work directory for Composer and CakePHP installation.
-# WORKDIR /var/www/html
+WORKDIR /var/www/html
 
 # Install Composer and remove more previously installed software to save space.
 RUN curl -sSL https://getcomposer.org/installer | php \
@@ -58,15 +60,17 @@ RUN curl -sSL https://getcomposer.org/installer | php \
 # Install latest version of CakePHP to the configured Apache Vhost folder. Then,
 # copy CakePHP config files to project to enable dotenv as well as define app
 # defaults which include database connection, cache and email settings.
-RUN composer create-project --prefer-dist cakephp/app /var/www/html/cakephp \
-    && mv /var/www/html/app.default.php /var/www/html/cakephp/config/app.default.php \
-    && mv /var/www/html/bootstrap.php /var/www/html/cakephp/config/bootstrap.php \
-    && mv /var/www/html/env.default /var/www/html/cakephp/config/.env
+RUN composer create-project --prefer-dist cakephp/app /var/www/html/cakephp
 
-# Apply all the correct permissions, restart Apache and check CakePHP version.
-RUN usermod -u 1000 www-data \
-    && service apache2 restart \
-    && /bin/sh /var/www/html/cakephp/bin/cake version
+COPY --chown=1000:www-data config/app.default.php cakephp/config/app.default.php
+COPY --chown=1000:www-data config/bootstrap.php cakephp/config/bootstrap.php
+COPY --chown=1000:www-data config/env.default cakephp/config/.env
+
+# Apply all the correct permissions and restart Apache.
+RUN usermod -u 1000 www-data && service apache2 restart
+
+# Check CakePHP version.
+# RUN ./cakephp/bin/cake version
 
 # Define ports 80 and 3306. Port 8765 is for CakePHP's development server should
 # you need to use it.

@@ -9,7 +9,7 @@
         AllowOverride None
     </Directory>
 
-    <Directory /var/www/html>
+    <Directory /var/www/html/cakephp/webroot>
         Order allow,deny
         Allow from all
         Options +Indexes +FollowSymLinks +MultiViews
