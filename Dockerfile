@@ -46,15 +46,10 @@ RUN service mysql restart \
 # Setup work directory for Composer and CakePHP installation.
 WORKDIR /var/www/html
 
-# Install Composer and remove more previously installed software to save space.
-RUN curl -sSL https://getcomposer.org/installer | php \
-    && mv composer.phar /usr/local/bin/composer
-
-# Install latest version of CakePHP.
-RUN composer create-project --prefer-dist cakephp/app /var/www/html \
+# Clone your application (cloning CakePHP 3 / app instead of composer create
+# project to demonstrate application deployment example).
+RUN git clone https://github.com/cakephp/app.git /var/www/html \
     && cp config/app.default.php config/app.php \
-    # Make Session Handler configurable via dotenv
-    && sed -i -e "s/'php',/env('SESSION_DEFAULTS', 'php'),/" config/app.php \
     # Enable dotenv support.
     && sed -i "52s/\/\///" config/bootstrap.php \
     && sed -i "53s/\/\///" config/bootstrap.php \
@@ -62,7 +57,9 @@ RUN composer create-project --prefer-dist cakephp/app /var/www/html \
     && sed -i "55s/\/\///" config/bootstrap.php \
     && sed -i "56s/\/\///" config/bootstrap.php \
     && sed -i "57s/\/\///" config/bootstrap.php \
-    && sed -i "58s/\/\///" config/bootstrap.php
+    && sed -i "58s/\/\///" config/bootstrap.php \
+    # Make Session Handler configurable via dotenv.
+    && sed -i -e "s/'php',/env('SESSION_DEFAULTS', 'php'),/" config/app.php
 
 # Copy the repos .env file to the project.
 COPY --chown=www-data:www-data config/env.default config/.env
