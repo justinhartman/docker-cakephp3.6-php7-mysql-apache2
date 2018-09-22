@@ -26,7 +26,6 @@ VOLUME  ["/etc/mysql", "/var/lib/mysql", "/var/www/html"]
 
 # Copy core files across.
 COPY --chown=1000:www-data database.sql /var/lib/mysql/database.sql
-# COPY --chown=1000:www-data config/ /var/www/html/config/
 COPY --chown=1000:www-data config/app.default.php /var/www/html/config/app.default.php
 COPY --chown=1000:www-data config/bootstrap.php /var/www/html/config/bootstrap.php
 COPY --chown=1000:www-data config/env.default /var/www/html/config/env.default
@@ -76,6 +75,9 @@ RUN usermod -u 1000 www-data && service apache2 restart
 # Define ports 80 and 3306. Port 8765 is for CakePHP's development server should
 # you need to use it.
 EXPOSE 80 3306 8765
+
+# Run Apache webserver
+CMD ["/usr/sbin/apache2ctl", "-DFOREGROUND"]
 
 # Now we can restart Apache for everything to kick in.
 # RUN service apache2 restart \
