@@ -28,11 +28,11 @@ ADD config/app.default.php /var/www/html/config/app.default.php
 ADD config/bootstrap.php /var/www/html/config/bootstrap.php
 ADD config/env.default /var/www/html/config/env.default
 
-# Create the CakePHP live and test databases as well as the database users.
-RUN mysql -u root -pRpgCNfRTBpEyBKdk6D < /var/lib/mysql/database.sql
-
 # Restart MySQL.
 RUN service mysql restart
+
+# Create the CakePHP live and test databases as well as the database users.
+RUN mysql -u root -pRpgCNfRTBpEyBKdk6D < /var/lib/mysql/database.sql
 
 # Open ports 80 and 3306. Port 8765 is for CakePHP's development server should
 # you need to use it.
@@ -64,21 +64,25 @@ RUN curl -sSL https://getcomposer.org/installer | php \
 RUN /usr/local/bin/composer create-project --prefer-dist cakephp/app \
     /var/www/html/cakephp
 
+# Change to the config directory to prepare for copying files over.
+WORKDIR /var/www/html/config
+
 # Copy CakePHP config files to project to enable dotenv and define app defaults
 # which include database connection settings.
-ADD config/app.default.php /var/www/html/cakephp/config/app.default.php
-ADD config/bootstrap.php /var/www/html/cakephp/config/bootstrap.php
-ADD config/env.default /var/www/html/cakephp/config/.env
+RUN mv app.default.php /var/www/html/cakephp/config/app.default.php
+RUN mv bootstrap.php /var/www/html/cakephp/config/bootstrap.php
+RUN mv env.default /var/www/html/cakephp/config/.env
 
-# Apply all the correct permissions.
+# Apply all the correct permissions on cakephp directory.
+WORKDIR /var/www/html/cakephp
 RUN usermod -u 1000 www-data
 
 # Now we can restart Apache for everything to kick in.
 RUN service apache2 restart
 
-# Change to CakePHP directory
-WORKDIR /var/www/html/cakephp
+# Test to see if Docker can pick up the cake shell script or not.
+RUN /bin/sh ./bin/cake version
 
 # Run the development server just in case. You can access this on port 8765.
 # I expect the build to fail right here.
-RUN /var/www/html/cakephp/bin/cake server -H 0.0.0.0
+RUN /bin/bash ./bin/cake server -H 0.0.0.0
