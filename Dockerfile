@@ -40,7 +40,9 @@ COPY config/database.sql /etc/mysql/database.sql
 COPY config/apache_default /etc/apache2/sites-available/000-default.conf
 
 # Enable mod_rewrite and set localhost as ServerName.
-RUN a2enmod rewrite && echo "ServerName localhost" >> /etc/apache2/apache2.conf
+RUN echo "LoadModule rewrite_module /usr/lib/apache2/modules/mod_rewrite.so" > \
+    /etc/apache2/mods-available/rewrite.load && a2enmod rewrite \
+    && echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 # Restart MySQL. Run database creation script.
 RUN service mysql restart \
