@@ -48,8 +48,8 @@ RUN apt-get update -q && apt-get install -qqy \
     php-simplexml \
     php-curl \
     php-codesniffer \
-    # Installs MySQL Server and the PHP extension.
-    mysql-server \
+    # Installs MariaDB Server and the PHP extension.
+    mariadb-server \
     php-mysql && \
     # Purge the apt list software to save space.
     rm -rf /var/lib/apt/lists/*
@@ -63,12 +63,12 @@ COPY database.sql /etc/mysql/database.sql
 
 # This fixes a bug on Docker Hub which prevents the image from building. It
 # doesn't happen on local machines, just Docker Hub. :-(
-RUN sed -i "s/key_buffer/key_buffer_size/g" /etc/mysql/my.cnf && \
-    sed -i "s/myisam-recover/myisam-recover-options/g" /etc/mysql/my.cnf
+# RUN sed -i "s/key_buffer/key_buffer_size/g" /etc/mysql/my.cnf && \
+#     sed -i "s/myisam-recover/myisam-recover-options/g" /etc/mysql/my.cnf
 
 # Start MySQL Server and create the two databases and users.
-RUN service mysql start \
-    && mysql -u root < /etc/mysql/database.sql
+RUN service mysql start && \
+    mysql -u root < /etc/mysql/database.sql
 
 ################################################################
 # Setup Apache vhost, enable rewrite and define localhost.     #
@@ -78,9 +78,9 @@ RUN service mysql start \
 COPY apache_default /etc/apache2/sites-available/000-default.conf
 
 # Enable mod_rewrite and add ServerName directive to Apache conf file.
-RUN a2enmod rewrite \
-    && echo "ServerName localhost" >> /etc/apache2/apache2.conf \
-    && service apache2 restart
+RUN a2enmod rewrite && \
+    echo "ServerName localhost" >> /etc/apache2/apache2.conf && \
+    service apache2 restart
 
 ################################################################
 # Deploy a CakePHP 3 Git installation from source.             #
@@ -100,22 +100,22 @@ WORKDIR /var/www/html
 RUN composer -n install
 
 # Copy the app.php file
-RUN cp config/app.default.php config/app.php \
+RUN cp config/app.default.php config/app.php && \
     # Enable dotenv support in bootstrap.php.
-    && sed -i "52s/\/\///" config/bootstrap.php \
-    && sed -i "53s/\/\///" config/bootstrap.php \
-    && sed -i "54s/\/\///" config/bootstrap.php \
-    && sed -i "55s/\/\///" config/bootstrap.php \
-    && sed -i "56s/\/\///" config/bootstrap.php \
-    && sed -i "57s/\/\///" config/bootstrap.php \
-    && sed -i "58s/\/\///" config/bootstrap.php \
+    sed -i "52s/\/\///" config/bootstrap.php && \
+    sed -i "53s/\/\///" config/bootstrap.php && \
+    sed -i "54s/\/\///" config/bootstrap.php && \
+    sed -i "55s/\/\///" config/bootstrap.php && \
+    sed -i "56s/\/\///" config/bootstrap.php && \
+    sed -i "57s/\/\///" config/bootstrap.php && \
+    sed -i "58s/\/\///" config/bootstrap.php && \
     # Make Session Handler configurable via dotenv.
-    && sed -i -e "s/'php',/env('SESSION_DEFAULTS', 'php'),/" config/app.php \
+    sed -i -e "s/'php',/env('SESSION_DEFAULTS', 'php'),/" config/app.php && \
     # Set owner and write permissions for files and folders.
-    && chown -R www-data:www-data . \
-    && chmod -R +rw logs tmp \
+    chown -R www-data:www-data . && \
+    chmod -R +rw logs tmp && \
     # Let Cake change permissions as it needs to.
-    && composer -n install
+    composer -n install
 
 # Copy the repos .env file, with database connection settings, to the project.
 COPY --chown=www-data:www-data env.default config/.env
