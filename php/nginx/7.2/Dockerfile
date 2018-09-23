@@ -24,8 +24,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-FROM ubuntu:bionic
-LABEL name="cakephp_nginx_7.2_image"
+FROM debian:sid-slim
+LABEL name="sid_nginx_7.2_image"
 LABEL description="Fully operational installation of CakePHP 3.6 with 2 \
 databases on PHP-FPM 7.2, Nginx 1.14 and MySQL 5.7."
 LABEL maintainer="Justin Hartman <justin@hartman.me>"
@@ -37,17 +37,18 @@ LABEL maintainer="Justin Hartman <justin@hartman.me>"
 # Install various packages needed for operation.
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update -q && apt-get install -qqy \
+    # Need to install procps so that we get the 'ps' command.
+    procps \
     git-core \
     composer \
     # Install Nginx and PHP-FPM.
     nginx \
-    php-fpm \
+    php7.2-fpm \
     # Other PHP extensions.
     php-intl \
     php-mbstring \
     php-zip \
     php-xml \
-    php-simplexml \
     php-curl \
     php-codesniffer \
     # Installs MySQL Server and the PHP extension.
@@ -64,8 +65,7 @@ RUN apt-get update -q && apt-get install -qqy \
 COPY database.sql /etc/mysql/database.sql
 
 # Start MySQL Server and create the two databases and users.
-RUN service mysql start && \
-    mysql -u root < /etc/mysql/database.sql
+RUN service mysql start && mysql -u root < /etc/mysql/database.sql
 
 ################################################################
 # Setup Nginx vhost                                            #

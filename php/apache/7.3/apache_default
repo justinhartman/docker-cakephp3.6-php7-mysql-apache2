@@ -1,0 +1,57 @@
+# Default virtual host configuration for "localhost" domain.
+#
+# Copyright (c) 2018 Justin Hartman <justin@hartman.me> https://justinhartman.blog
+# Repo: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+<VirtualHost *:80>
+    ServerAdmin webmaster@localhost
+
+    DocumentRoot /var/www/html
+
+    <Directory />
+        Options FollowSymLinks
+        AllowOverride None
+    </Directory>
+
+    <Directory /var/www/html>
+        Order allow,deny
+        Allow from all
+        Options +Indexes +FollowSymLinks +MultiViews
+        AllowOverride FileInfo
+    </Directory>
+
+    ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
+    <Directory "/usr/lib/cgi-bin">
+        Order allow,deny
+        Allow from all
+        Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+        AllowOverride None
+    </Directory>
+
+    # Possible values are: debug, info, notice, warn, error, crit, alert, emerg.
+    LogLevel warn
+    # Error log locations.
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+    # Set HTTPS environment variable if we came in over secure channel.
+    SetEnvIf x-forwarded-proto https HTTPS=on
+</VirtualHost>

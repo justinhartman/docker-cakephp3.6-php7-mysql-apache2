@@ -1,7 +1,7 @@
 # A CakePHP Docker Container which installs a fresh, fully configured and
 # operational version of CakePHP 3.6. It comes with two pre-configured
 # databases, for both production and testing environments and the app runs on
-# PHP 7.2, Apache 2.4 and MySQL 5.7.
+# PHP-FPM 7.1, Nginx 1.14 and MySQL 5.7.
 #
 # Copyright (c) 2018 Justin Hartman <justin@hartman.me> https://justinhartman.blog
 # Repo: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2
@@ -25,9 +25,9 @@
 # SOFTWARE.
 
 FROM debian:sid-slim
-LABEL name="sid_apache_7.2_image"
+LABEL name="sid_nginx_7.1_image"
 LABEL description="Fully operational installation of CakePHP 3.6 with 2 \
-databases on PHP 7.2, Apache 2.4 and MySQL 5.7."
+databases on PHP-FPM 7.1, Nginx 1.14 and MySQL 5.7."
 LABEL maintainer="Justin Hartman <justin@hartman.me>"
 
 ################################################################
@@ -41,8 +41,10 @@ RUN apt-get update -q && apt-get install -qqy \
     procps \
     git-core \
     composer \
-    # Installing mod-php installs both recommended PHP 7 and Apache 2.
-    libapache2-mod-php7.2 \
+    # Install Nginx and PHP-FPM.
+    nginx \
+    php7.1-fpm \
+    # Other PHP extensions.
     php-intl \
     php-mbstring \
     php-zip \
@@ -66,16 +68,19 @@ COPY database.sql /etc/mysql/database.sql
 RUN service mysql start && mysql -u root < /etc/mysql/database.sql
 
 ################################################################
-# Setup Apache vhost, enable rewrite and define localhost.     #
+# Setup Nginx vhost                                            #
 ################################################################
 
-# Copy default vhost to Apache config folder.
-COPY apache_default /etc/apache2/sites-available/000-default.conf
+# Disable daemon mode for Nginx.
+RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 
-# Enable mod_rewrite and add ServerName directive to Apache conf file.
-RUN a2enmod rewrite && \
-    echo "ServerName localhost" >> /etc/apache2/apache2.conf && \
-    service apache2 restart
+# Copy default vhost to Apache config folder.
+COPY nginx_default /etc/nginx/sites-available/localhost
+
+# Enable the nginx vhost.
+RUN rm /etc/nginx/sites-enabled/default && \
+    ln -s /etc/nginx/sites-available/localhost /etc/nginx/sites-enabled/ && \
+    service nginx reload
 
 ################################################################
 # Deploy a CakePHP 3 Git installation from source.             #
@@ -116,12 +121,12 @@ RUN cp config/app.default.php config/app.php && \
 COPY --chown=www-data:www-data env.default config/.env
 
 ####################################################
-# Run startup script for Apache and MySQL.         #
+# Run startup script for Nginx, php-fpm and MySQL. #
 ####################################################
 
 # Define ports 80 and 3306.
 EXPOSE 80 3306
 
-# Copy and Run the services script which checks and starts MySQL and Apache.
+# Copy and Run the services script which checks and starts MySQL and Nginx.
 COPY run_services.sh /usr/local/bin/run_services
 CMD ["run_services"]

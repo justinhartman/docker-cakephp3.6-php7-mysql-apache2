@@ -24,8 +24,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-FROM ubuntu:xenial
-LABEL name="cakephp_7.0_image"
+FROM debian:sid-slim
+LABEL name="sid_apache_7.0_image"
 LABEL description="Fully operational installation of CakePHP 3.6 with 2 \
 databases on PHP 7.0, Apache 2.4 and MySQL 5.7."
 LABEL maintainer="Justin Hartman <justin@hartman.me>"
@@ -37,15 +37,16 @@ LABEL maintainer="Justin Hartman <justin@hartman.me>"
 # Install various packages needed for operation.
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update -q && apt-get install -qqy \
+    # Need to install procps so that we get the 'ps' command.
+    procps \
     git-core \
     composer \
     # Installing mod-php installs both recommended PHP 7 and Apache 2.
-    libapache2-mod-php \
+    libapache2-mod-php7.0 \
     php-intl \
     php-mbstring \
     php-zip \
     php-xml \
-    php-simplexml \
     php-curl \
     php-codesniffer \
     # Installs MySQL Server and the PHP extension.
@@ -62,8 +63,7 @@ RUN apt-get update -q && apt-get install -qqy \
 COPY database.sql /etc/mysql/database.sql
 
 # Start MySQL Server and create the two databases and users.
-RUN service mysql start \
-    && mysql -u root < /etc/mysql/database.sql
+RUN service mysql start && mysql -u root < /etc/mysql/database.sql
 
 ################################################################
 # Setup Apache vhost, enable rewrite and define localhost.     #
@@ -73,9 +73,9 @@ RUN service mysql start \
 COPY apache_default /etc/apache2/sites-available/000-default.conf
 
 # Enable mod_rewrite and add ServerName directive to Apache conf file.
-RUN a2enmod rewrite \
-    && echo "ServerName localhost" >> /etc/apache2/apache2.conf \
-    && service apache2 restart
+RUN a2enmod rewrite && \
+    echo "ServerName localhost" >> /etc/apache2/apache2.conf && \
+    service apache2 restart
 
 ################################################################
 # Deploy a CakePHP 3 Git installation from source.             #
@@ -95,22 +95,22 @@ WORKDIR /var/www/html
 RUN composer -n install
 
 # Copy the app.php file
-RUN cp config/app.default.php config/app.php \
+RUN cp config/app.default.php config/app.php && \
     # Enable dotenv support in bootstrap.php.
-    && sed -i "52s/\/\///" config/bootstrap.php \
-    && sed -i "53s/\/\///" config/bootstrap.php \
-    && sed -i "54s/\/\///" config/bootstrap.php \
-    && sed -i "55s/\/\///" config/bootstrap.php \
-    && sed -i "56s/\/\///" config/bootstrap.php \
-    && sed -i "57s/\/\///" config/bootstrap.php \
-    && sed -i "58s/\/\///" config/bootstrap.php \
+    sed -i "52s/\/\///" config/bootstrap.php && \
+    sed -i "53s/\/\///" config/bootstrap.php && \
+    sed -i "54s/\/\///" config/bootstrap.php && \
+    sed -i "55s/\/\///" config/bootstrap.php && \
+    sed -i "56s/\/\///" config/bootstrap.php && \
+    sed -i "57s/\/\///" config/bootstrap.php && \
+    sed -i "58s/\/\///" config/bootstrap.php && \
     # Make Session Handler configurable via dotenv.
-    && sed -i -e "s/'php',/env('SESSION_DEFAULTS', 'php'),/" config/app.php \
+    sed -i -e "s/'php',/env('SESSION_DEFAULTS', 'php'),/" config/app.php && \
     # Set owner and write permissions for files and folders.
-    && chown -R www-data:www-data . \
-    && chmod -R +rw logs tmp \
+    chown -R www-data:www-data . && \
+    chmod -R +rw logs tmp && \
     # Let Cake change permissions as it needs to.
-    && composer -n install
+    composer -n install
 
 # Copy the repos .env file, with database connection settings, to the project.
 COPY --chown=www-data:www-data env.default config/.env

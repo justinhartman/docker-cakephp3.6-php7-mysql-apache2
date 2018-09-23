@@ -1,7 +1,7 @@
 # A CakePHP Docker Container which installs a fresh, fully configured and
 # operational version of CakePHP 3.6. It comes with two pre-configured
 # databases, for both production and testing environments and the app runs on
-# PHP 7.2, Apache 2.4 and MySQL 5.7.
+# PHP 7.1, Apache 2.4 and MySQL 5.7.
 #
 # Copyright (c) 2018 Justin Hartman <justin@hartman.me> https://justinhartman.blog
 # Repo: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2
@@ -25,9 +25,9 @@
 # SOFTWARE.
 
 FROM debian:sid-slim
-LABEL name="sid_apache_7.2_image"
+LABEL name="sid_apache_7.1_image"
 LABEL description="Fully operational installation of CakePHP 3.6 with 2 \
-databases on PHP 7.2, Apache 2.4 and MySQL 5.7."
+databases on PHP 7.1, Apache 2.4 and MySQL 5.7."
 LABEL maintainer="Justin Hartman <justin@hartman.me>"
 
 ################################################################
@@ -42,7 +42,7 @@ RUN apt-get update -q && apt-get install -qqy \
     git-core \
     composer \
     # Installing mod-php installs both recommended PHP 7 and Apache 2.
-    libapache2-mod-php7.2 \
+    libapache2-mod-php7.1 \
     php-intl \
     php-mbstring \
     php-zip \
