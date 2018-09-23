@@ -138,4 +138,4 @@ concepts of Ruby on Rails, and distributed under the MIT License.
 [issues]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/issues
 [releases]: https://github.com/docker/docker-ce/releases/latest
 [7.2]: https://github.com/justinhartman/docker-cakephp3.5-php7-mysql-apache2/blob/c9a60c3c9ad1a4b1b7bc596fe3ac6dcc99e73d47/php/apache/7.2/Dockerfile
-[7.0]: https://github.com/justinhartman/docker-cakephp3.5-php7-mysql-apache2/blob/?????/php/apache/7.0/Dockerfile
+[7.0]: https://github.com/justinhartman/docker-cakephp3.5-php7-mysql-apache2/blob/60946cf5f78f5956f43545f65f5737119e8d202c/php/apache/7.0/Dockerfile
