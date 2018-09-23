@@ -61,8 +61,14 @@ RUN apt-get update -q && apt-get install -qqy \
 # Copy the sql statments script.
 COPY database.sql /etc/mysql/database.sql
 
+# This fixes a bug on Docker Hub which prevents the image from building. It
+# doesn't happen on local machines, just Docker Hub. :-(
+RUN sed -i "s/key_buffer/key_buffer_size/g" /etc/mysql/my.cnf && \
+    sed -i "s/myisam-recover/myisam-recover-options/g" /etc/mysql/my.cnf
+
 # Start MySQL Server and create the two databases and users.
-RUN mysql -u root < /etc/mysql/database.sql
+RUN service mysql start \
+    && mysql -u root < /etc/mysql/database.sql
 
 ################################################################
 # Setup Apache vhost, enable rewrite and define localhost.     #
