@@ -25,7 +25,7 @@
 # SOFTWARE.
 
 FROM ubuntu:bionic
-LABEL name="cakephp_image"
+LABEL name="cakephp_7.2_image"
 LABEL description="Fully operational installation of CakePHP 3.6 with 2 \
 databases on PHP 7.2, Apache 2.4 and MySQL 5.7."
 LABEL maintainer="Justin Hartman <justin@hartman.me>"
@@ -62,8 +62,7 @@ RUN apt-get update -q && apt-get install -qqy \
 COPY database.sql /etc/mysql/database.sql
 
 # Start MySQL Server and create the two databases and users.
-RUN service mysql start \
-    && mysql -u root < /etc/mysql/database.sql
+RUN mysql -u root < /etc/mysql/database.sql
 
 ################################################################
 # Setup Apache vhost, enable rewrite and define localhost.     #
