@@ -24,8 +24,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-FROM ubuntu:bionic
-LABEL name="cakephp_7.2_image"
+FROM debian:sid-slim
+LABEL name="sid_apache_7.2_image"
 LABEL description="Fully operational installation of CakePHP 3.6 with 2 \
 databases on PHP 7.2, Apache 2.4 and MySQL 5.7."
 LABEL maintainer="Justin Hartman <justin@hartman.me>"
@@ -40,16 +40,15 @@ RUN apt-get update -q && apt-get install -qqy \
     git-core \
     composer \
     # Installing mod-php installs both recommended PHP 7 and Apache 2.
-    libapache2-mod-php \
+    libapache2-mod-php7.2 \
     php-intl \
     php-mbstring \
     php-zip \
     php-xml \
-    php-simplexml \
     php-curl \
     php-codesniffer \
-    # Installs MariaDB Server and the PHP extension.
-    mariadb-server \
+    # Installs MySQL Server and the PHP extension.
+    mysql-server \
     php-mysql && \
     # Purge the apt list software to save space.
     rm -rf /var/lib/apt/lists/*
@@ -61,14 +60,8 @@ RUN apt-get update -q && apt-get install -qqy \
 # Copy the sql statments script.
 COPY database.sql /etc/mysql/database.sql
 
-# This fixes a bug on Docker Hub which prevents the image from building. It
-# doesn't happen on local machines, just Docker Hub. :-(
-# RUN sed -i "s/key_buffer/key_buffer_size/g" /etc/mysql/my.cnf && \
-#     sed -i "s/myisam-recover/myisam-recover-options/g" /etc/mysql/my.cnf
-
 # Start MySQL Server and create the two databases and users.
-RUN service mysql start && \
-    mysql -u root < /etc/mysql/database.sql
+RUN service mysql start && mysql -u root < /etc/mysql/database.sql
 
 ################################################################
 # Setup Apache vhost, enable rewrite and define localhost.     #
