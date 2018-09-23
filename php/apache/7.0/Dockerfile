@@ -1,7 +1,7 @@
-FROM ubuntu:bionic
-LABEL name="cakephp_image"
+FROM ubuntu:xenial
+LABEL name="cakephp_7.0_image"
 LABEL description="Fully operational installation of CakePHP 3.6 with 2 \
-databases on PHP 7.2, Apache 2.4 and MySQL 5.7."
+databases on PHP 7.0, Apache 2.4 and MySQL 5.7."
 LABEL maintainer="Justin Hartman <justin@hartman.me>"
 
 ################################################################
