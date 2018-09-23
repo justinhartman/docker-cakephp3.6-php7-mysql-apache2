@@ -3,19 +3,18 @@
 A [CakePHP Docker Container][docker] which installs a fresh, fully configured
 and operational version of CakePHP 3.6. It comes with two pre-configured
 databases, for both production and testing environments and the app runs on PHP
-7.2, Apache 2.4 and MySQL 5.7.
+7.0 up to 7.3, Apache 2.4 (or Nginx 1.14) and MySQL 5.7.
 
 <!-- TOC START min:2 max:6 link:true update:true -->
 - [Installation](#installation)
 - [Supported Tags and respective `Dockerfile` links](#supported-tags-and-respective-dockerfile-links)
-    - [`apache-php-7.2`, `apache-7.2` and `latest`](#apache-php-72-apache-72-and-latest)
-    - [`apache-php-7.0` and `apache-7.0`](#apache-php-70-and-apache-70)
-    - [`nginx-php-7.2` and `nginx-7.2`](#nginx-php-72-and-nginx-72)
+    - [Apache PHP 7](#apache-php-7)
+    - [Nginx PHP-FPM 7](#nginx-php-fpm-7)
 - [Modifying CakePHP Settings](#modifying-cakephp-settings)
 - [Accessing the Databases](#accessing-the-databases)
     - [Production Database](#production-database)
     - [Testing Database](#testing-database)
-    - [Changing User Passwords](#changing-user-passwords)
+    - [Changing MySQL Passwords](#changing-mysql-passwords)
 - [What is CakePHP?](#what-is-cakephp)
 - [Quick reference](#quick-reference)
 
@@ -34,36 +33,36 @@ docker run -p 80:80 justinhartman/cakephp3.5-php7-mysql-apache2:latest
 
 ## Supported Tags and respective `Dockerfile` links
 
-### `apache-php-7.2`, `apache-7.2` and `latest`
+Below are tags to various PHP versions running either `Apache` or `Nginx` which
+come pre-installed in all the containers. Pick the version of PHP and web-server
+of your choosing, based on the tags below, when installing or running a
+container.
 
-[`apache-php-7.2`, `apache-7.2`, `latest` (php/apache/7.2/Dockerfile)][apache-7.2]
+### Apache PHP 7
 
-The tags above install the following software versions:
+- `apache-php-7.3.0`, `apache-php-7.3`, `apache-7.3` [(php/apache/7.3/Dockerfile)][apache-7.3]
+- `apache-php-7.2.9`, `apache-php-7.2`, `apache-7.2`, `latest` [(php/apache/7.2/Dockerfile)][apache-7.2]
+- `apache-php-7.1.20`, `apache-php-7.1`, `apache-7.1` [(php/apache/7.1/Dockerfile)][apache-7.1]
+- `apache-php-7.0.31`, `apache-php-7.0`, `apache-7.0` [(php/apache/7.0/Dockerfile)][apache-7.0]
+
+The containers also come with the following additional software versions
+installed:
 
 1. CakePHP 3.6.11
-1. PHP 7.2.10
-1. Apache 2.4.29
+1. Apache 2.4.34
 1. MySQL 5.7.23
 
-### `apache-php-7.0` and `apache-7.0`
+### Nginx PHP-FPM 7
 
-[`apache-php-7.0`, `apache-7.0` (php/apache/7.0/Dockerfile)][apache-7.0]
+- `nginx-php-7.3.0`, `nginx-php-7.3`, `nginx-7.3` [(php/nginx/7.3/Dockerfile)][nginx-7.3]
+- `nginx-php-7.2.9`, `nginx-php-7.2`, `nginx-7.2` [(php/nginx/7.2/Dockerfile)][nginx-7.2]
+- `nginx-php-7.1.20`, `nginx-php-7.1`, `nginx-7.1` [(php/nginx/7.1/Dockerfile)][nginx-7.1]
+- `nginx-php-7.0.31`, `nginx-php-7.0`, `nginx-7.0` [(php/nginx/7.0/Dockerfile)][nginx-7.0]
 
-The tags above install the following software versions:
-
-1. CakePHP 3.6.11
-1. PHP 7.0.32
-1. Apache 2.4.18
-1. MySQL 5.7.23
-
-### `nginx-php-7.2` and `nginx-7.2`
-
-[`nginx-php-7.2`, `nginx-7.2`, `latest` (php/nginx/7.2/Dockerfile)][nginx-7.2]
-
-The tags above install the following software versions:
+The containers also come with the following additional software versions
+installed:
 
 1. CakePHP 3.6.11
-1. PHP-FPM 7.2.10
 1. Nginx 1.14.0
 1. MySQL 5.7.23
 
@@ -82,14 +81,12 @@ The `.env` file has configuration options for:
 - Email transport
 - Database connection
 - Logging options
-- Session and Error level configuration
+- Session and Error level handling
 
 ## Accessing the Databases
 
-The container comes with MySQL pre-installed and during the Docker creation, two
+The containers come with MySQL pre-installed. During the Docker creation, two
 databases are installed for both production and any unit tests you need to run.
-
-These are:
 
 ### Production Database
 
@@ -107,7 +104,7 @@ Password: `4hiEKuzgFr54fyPVQJ`
 Connection: `DATABASE_TEST_URL` exists in your `/config/.env` file with the full
 connection string to the testing database.
 
-### Changing User Passwords
+### Changing MySQL Passwords
 
 If you'd like to change the password for the two default MySQL user accounts
 then run the following commands in MySQL - replace `$PASSWORD` with your new
@@ -147,6 +144,11 @@ concepts of Ruby on Rails, and distributed under the MIT License.
 [justinhartman]: https://github.com/justinhartman
 [issues]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/issues
 [releases]: https://github.com/docker/docker-ce/releases/latest
-[apache-7.2]: https://github.com/justinhartman/docker-cakephp3.5-php7-mysql-apache2/blob/c9a60c3c9ad1a4b1b7bc596fe3ac6dcc99e73d47/php/apache/7.2/Dockerfile
-[apache-7.0]: https://github.com/justinhartman/docker-cakephp3.5-php7-mysql-apache2/blob/60946cf5f78f5956f43545f65f5737119e8d202c/php/apache/7.0/Dockerfile
-[nginx-7.2]:https://github.com/justinhartman/docker-cakephp3.5-php7-mysql-apache2/blob/0d9e1f21dbd21c60191ed293252a156d50bc2391/php/nginx/7.2/Dockerfile
+[apache-7.3]: https://github.com/justinhartman/docker-cakephp3.5-php7-mysql-apache2/blob/647cc05ec1d88099a1666a478f0ef7e56a617c02/php/apache/7.3/Dockerfile
+[apache-7.2]: https://github.com/justinhartman/docker-cakephp3.5-php7-mysql-apache2/blob/647cc05ec1d88099a1666a478f0ef7e56a617c02/php/apache/7.2/Dockerfile
+[apache-7.1]: https://github.com/justinhartman/docker-cakephp3.5-php7-mysql-apache2/blob/647cc05ec1d88099a1666a478f0ef7e56a617c02/php/apache/7.1/Dockerfile
+[apache-7.0]: https://github.com/justinhartman/docker-cakephp3.5-php7-mysql-apache2/blob/647cc05ec1d88099a1666a478f0ef7e56a617c02/php/apache/7.0/Dockerfile
+[nginx-7.3]: https://github.com/justinhartman/docker-cakephp3.5-php7-mysql-apache2/blob/647cc05ec1d88099a1666a478f0ef7e56a617c02/php/nginx/7.3/Dockerfile
+[nginx-7.2]: https://github.com/justinhartman/docker-cakephp3.5-php7-mysql-apache2/blob/647cc05ec1d88099a1666a478f0ef7e56a617c02/php/nginx/7.2/Dockerfile
+[nginx-7.1]: https://github.com/justinhartman/docker-cakephp3.5-php7-mysql-apache2/blob/647cc05ec1d88099a1666a478f0ef7e56a617c02/php/nginx/7.1/Dockerfile
+[nginx-7.0]: https://github.com/justinhartman/docker-cakephp3.5-php7-mysql-apache2/blob/647cc05ec1d88099a1666a478f0ef7e56a617c02/php/nginx/7.0/Dockerfile
