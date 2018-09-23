@@ -1,0 +1,29 @@
+server {
+    listen 80;
+    listen [::]:80;
+    server_name localhost;
+
+    root  /var/www/html/webroot;
+    index index.php index.html;
+
+    access_log  /var/log/nginx/localhost.access_log;
+    error_log   /var/log/nginx/localhost.error_log;
+
+    location / {
+        try_files $uri $uri/ /index.php?$args;
+    }
+
+    location ~ \.php$ {
+        try_files $uri =404;
+        # include snippets/fastcgi-php.conf;
+        include fastcgi_params;
+        fastcgi_pass unix:/var/run/php/php7.2-fpm.sock;
+        fastcgi_index index.php;
+        fastcgi_intercept_errors on;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    }
+
+    location ~ /\.ht {
+        deny all;
+    }
+}
