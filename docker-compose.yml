@@ -1,8 +1,83 @@
-version: '2.1'
-
+# This compose file will build the CakePHP app running on PHP7.2 and also attach
+# a seperate MySQL 5.7 container and Adminer. The Adminer container will connect
+# to the MySQL instance.
+#
+# TODO: If this method is used, the CakePHP Dockerfile will need to not build
+# MySQL (as it's provided in here) and rather create the Databases and Users in
+# the new MySQL container. I don't know how to do this yet but makes sense if
+# using a compose file.
+# 
+# Copyright (c) 2018 Justin Hartman <justin@hartman.me> https://justinhartman.blog
+# Repo: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+version: "3"
 services:
-  docker-cakephp3-php7-apache2:
-    image: docker-cakephp3-php7-apache2
-    build: .
+  php72:
+    build:
+      context: ./php/apache/7.2
+      dockerfile: Dockerfile
+    image: justinhartman/cakephp3.5-php7-mysql-apache2:apache-7.2
+    restart: always
+    labels:
+      agency.22digital.cakephp.description: "Cake 3.6 running PHP 7.2 on Apache"
+      agency.22digital.cakephp.name: "sid_apache_7.2_image"
     ports:
       - 80:80
+    volumes:
+      - "/etc/mysql"
+      - "/var/lib/mysql"
+      - "/etc/apache2"
+      - "/var/www/html"
+  db:
+    image: mysql:5.7
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    labels:
+      agency.22digital.cakephp.description: "MySQL 5.7 container."
+      agency.22digital.cakephp.name: "mysql_5.7_image"
+    environment:
+      MYSQL_ROOT_PASSWORD: RpgCNfRTBpEyBKdk6D
+  adminer:
+    image: adminer
+    restart: always
+    labels:
+      agency.22digital.cakephp.description: "Adminer container."
+      agency.22digital.cakephp.name: "adminer_image"
+    ports:
+      - 8080:8080
+  # php70:
+  #   build:
+  #     context: ./php/apache/7.0
+  #     dockerfile: Dockerfile
+  #   image: cakephp3.5-php7-mysql-apache2:php-7.0
+  #   restart: always
+  #   labels:
+  #     agency.22digital.cakephp.description: "Cake 3.6 running PHP 7.0 on Apache"
+  #   ports:
+  #     - 80:80
+  # db:
+  #   image: mysql:5.7
+  #   volumes:
+  #     - db-data:/var/lib/mysql
+  #   networks:
+  #     - backend
+  #   deploy:
+  #     placement:
+  #       constraints: [node.role == manager]

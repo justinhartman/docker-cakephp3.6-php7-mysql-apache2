@@ -91,6 +91,24 @@ docker container ls -q                                      # List container IDs
 docker stack rm <appname>                             # Tear down an application
 docker swarm leave --force      # Take down a single node swarm from the manager
 
+# Docker Compose #
+##################
+
+# Build the app from docker-compose.yml.
+docker-compose up
+# Run in daemon mode.
+docker-compose up -d
+# Stope the daemon.
+docker-compose stop
+# Remove containers, bring everything down and remove volumes
+docker-compose down --volumes
+# Specify an alternate compose file.
+docker-compose up -f docker-compose.debug.yml
+# Use -p to specify a project name
+docker-compose up -p sid_apache_7.3_image
+# Pull a specific build item from the file
+docker-compose -f php/apache/7.2/docker-compose.yml pull db
+
 # Swarm Clusters #
 ##################
 
