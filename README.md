@@ -19,7 +19,7 @@ databases, for both production and testing environments and the app runs on PHP
 - [Quick reference](#quick-reference)
 
 <!-- TOC END -->
-![CakePHP 3.6.11](cakephp_3.6.11.png)
+![CakePHP 3.6.11][screenshot]
 
 ## Installation
 
@@ -138,6 +138,7 @@ concepts of Ruby on Rails, and distributed under the MIT License.
 - **Supported Docker versions**:  
   [the latest release][releases] (down to 1.6 on a best-effort basis)
 
+[screenshot]: https://raw.githubusercontent.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/master/cakephp_3.6.11.png
 [cakephp]: http://cakephp.org
 [docker]: https://hub.docker.com/r/justinhartman/cakephp3.5-php7-mysql-apache2/
 [dotenv]: https://github.com/josegonzalez/php-dotenv
