@@ -12,10 +12,12 @@ versus MySQL_ note below on why MariaDB was chosen over MySQL).
     - [Apache PHP 7](#apache-php-7)
     - [Nginx PHP-FPM 7](#nginx-php-fpm-7)
 - [Modifying CakePHP Settings](#modifying-cakephp-settings)
+- [MariaDB versus MySQL](#mariadb-versus-mysql)
 - [Accessing the Databases](#accessing-the-databases)
     - [Production Database](#production-database)
     - [Testing Database](#testing-database)
     - [Changing MySQL Passwords](#changing-mysql-passwords)
+        - [Setting the MySQL Root Password](#setting-the-mysql-root-password)
 - [What is CakePHP?](#what-is-cakephp)
 - [Quick reference](#quick-reference)
 
@@ -84,6 +86,15 @@ The `.env` file has configuration options for:
 - Logging options
 - Session and Error level handling
 
+## MariaDB versus MySQL
+
+MariaDB 10.1 is installed due to a bug with MySQL 5.7 that prevents it
+installing when building on Docker Hub. Ironically, if you build the image on
+your machine MySQL 5.7 builds fine so the issue, for whatever reason, only
+exists on Docker Hub. If you need MySQL 5.7 you could change the
+`mariadb-server` option to `mysql-server` by editing the `Dockerfile` and
+building the image yourself.
+
 ## Accessing the Databases
 
 The containers come with MariaDB pre-installed. During the Docker creation, two
@@ -117,19 +128,14 @@ mysql> ALTER USER 'cakephp_live_user'@'localhost' IDENTIFIED BY '$PASSWORD';
 mysql> ALTER USER 'cakephp_test_user'@'localhost' IDENTIFIED BY '$PASSWORD';
 ```
 
-**IMPORTANT:** The MySQL root password has not been set in the Docker container.
+#### Setting the MySQL Root Password
+
+The MySQL root password has not been set in the Docker container.
 Please make sure to change this and set a password for your `root` MySQL
 account as it is not secure if left as is. You can follow the same method above
 to set a `root` password or you could run `$ mysql_secure_installation` in a
 terminal window in the Container Image which would completely secure your
 MySQL installation.
-
-**MariaDB versus MySQL:** _MariaDB 10.1 is installed due to a bug with MySQL 5.7
-that prevents it installing when building on Docker Hub. Ironically, if you
-build the image on your machine MySQL 5.7 builds fine so the issue, for whatever
-reason, only exists on Docker Hub. If you need MySQL 5.7 you could change the
-`mariadb-server` option to `mysql-server` by editing the `Dockerfile`
-and building the image yourself._
 
 ## What is CakePHP?
 
