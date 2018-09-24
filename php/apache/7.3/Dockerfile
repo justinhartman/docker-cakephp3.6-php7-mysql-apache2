@@ -43,7 +43,9 @@ RUN apt-get update -q && apt-get install -qqy \
     composer \
     # Installing mod-php installs both recommended PHP 7 and Apache 2.
     libapache2-mod-php7.3 \
-    php-intl \
+    # Specifying the 7.3 extension explicityly as Docker Hub fails to run
+    # Composer (later on) without it.
+    php7.3-intl \
     php-mbstring \
     php-zip \
     php-xml \
