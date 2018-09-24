@@ -1,9 +1,10 @@
-# CakePHP 3.6 Docker Image Container
+# CakePHP 3.6 Docker Container
 
 A [CakePHP Docker Container][docker] which installs a fresh, fully configured
 and operational version of CakePHP 3.6. It comes with two pre-configured
 databases, for both production and testing environments and the app runs on PHP
-7.0 up to 7.3, Apache 2.4 (or Nginx 1.14) and MariaDB 10.1.
+7.0 up to 7.3, Apache 2.4 (or Nginx 1.14) and MariaDB 10.1 (read the _MariaDB
+versus MySQL_ note below on why MariaDB was chosen over MySQL).
 
 <!-- TOC START min:2 max:6 link:true update:true -->
 - [Installation](#installation)
@@ -85,7 +86,7 @@ The `.env` file has configuration options for:
 
 ## Accessing the Databases
 
-The containers come with MySQL pre-installed. During the Docker creation, two
+The containers come with MariaDB pre-installed. During the Docker creation, two
 databases are installed for both production and any unit tests you need to run.
 
 ### Production Database
@@ -122,6 +123,13 @@ account as it is not secure if left as is. You can follow the same method above
 to set a `root` password or you could run `$ mysql_secure_installation` in a
 terminal window in the Container Image which would completely secure your
 MySQL installation.
+
+**MariaDB versus MySQL:** _MariaDB 10.1 is installed due to a bug with MySQL 5.7
+that prevents it installing when building on Docker Hub. Ironically, if you
+build the image on your machine MySQL 5.7 builds fine so the issue, for whatever
+reason, only exists on Docker Hub. If you need MySQL 5.7 you could change the
+`mariadb-server` option to `mysql-server` by editing the `Dockerfile`
+and building the image yourself._
 
 ## What is CakePHP?
 
