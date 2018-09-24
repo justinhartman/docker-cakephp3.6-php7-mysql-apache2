@@ -27,7 +27,7 @@
 FROM debian:sid-slim
 LABEL name="sid_nginx_7.3_image"
 LABEL description="Fully operational installation of CakePHP 3.6 with 2 \
-databases on PHP-FPM 7.3, Nginx 1.14 and MariaDB 10.1."
+databases on MariaDB 10.1, PHP-FPM 7.3, Nginx 1.14."
 LABEL maintainer="Justin Hartman <justin@hartman.me>"
 
 ################################################################

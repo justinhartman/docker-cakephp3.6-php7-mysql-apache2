@@ -27,7 +27,7 @@
 FROM debian:sid-slim
 LABEL name="sid_apache_7.1_image"
 LABEL description="Fully operational installation of CakePHP 3.6 with 2 \
-databases on PHP 7.1, Apache 2.4 and MariaDB 10.1."
+databases on MariaDB 10.1, PHP 7.1, Apache 2.4."
 LABEL maintainer="Justin Hartman <justin@hartman.me>"
 
 ################################################################
