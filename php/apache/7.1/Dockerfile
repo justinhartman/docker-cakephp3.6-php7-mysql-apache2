@@ -1,7 +1,7 @@
 # A CakePHP Docker Container which installs a fresh, fully configured and
 # operational version of CakePHP 3.6. It comes with two pre-configured
 # databases, for both production and testing environments and the app runs on
-# PHP 7.1, Apache 2.4 and MySQL 5.7.
+# PHP 7.1, Apache 2.4 and MariaDB 10.1.
 #
 # Copyright (c) 2018 Justin Hartman <justin@hartman.me> https://justinhartman.blog
 # Repo: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2
@@ -27,7 +27,7 @@
 FROM debian:sid-slim
 LABEL name="sid_apache_7.1_image"
 LABEL description="Fully operational installation of CakePHP 3.6 with 2 \
-databases on PHP 7.1, Apache 2.4 and MySQL 5.7."
+databases on PHP 7.1, Apache 2.4 and MariaDB 10.1."
 LABEL maintainer="Justin Hartman <justin@hartman.me>"
 
 ################################################################
@@ -49,8 +49,10 @@ RUN apt-get update -q && apt-get install -qqy \
     php-xml \
     php-curl \
     php-codesniffer \
-    # Installs MySQL Server and the PHP extension.
-    mysql-server \
+    # Installing MariaDB 10.1 due to a bug with MySQL 5.7 that prevents it
+    # installing when building on Docker Hub. You could change this to
+    # mysql-server if you really need MySQL 5.7.
+    mariadb-server \
     php-mysql && \
     # Purge the apt list software to save space.
     rm -rf /var/lib/apt/lists/*

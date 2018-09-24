@@ -3,7 +3,7 @@
 A [CakePHP Docker Container][docker] which installs a fresh, fully configured
 and operational version of CakePHP 3.6. It comes with two pre-configured
 databases, for both production and testing environments and the app runs on PHP
-7.0 up to 7.3, Apache 2.4 (or Nginx 1.14) and MySQL 5.7.
+7.0 up to 7.3, Apache 2.4 (or Nginx 1.14) and MariaDB 10.1.
 
 <!-- TOC START min:2 max:6 link:true update:true -->
 - [Installation](#installation)
@@ -50,7 +50,7 @@ installed:
 
 1. CakePHP 3.6.11
 1. Apache 2.4.34
-1. MySQL 5.7.23
+1. MariaDB 10.1.35
 
 ### Nginx PHP-FPM 7
 
@@ -64,7 +64,7 @@ installed:
 
 1. CakePHP 3.6.11
 1. Nginx 1.14.0
-1. MySQL 5.7.23
+1. MariaDB 10.1.35
 
 ## Modifying CakePHP Settings
 
