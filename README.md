@@ -159,11 +159,11 @@ concepts of Ruby on Rails, and distributed under the MIT License.
 [justinhartman]: https://github.com/justinhartman
 [issues]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/issues
 [releases]: https://github.com/docker/docker-ce/releases/latest
-[apache-7.3]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/blob/52f9ef60b4ac059861ae083a31c0215ca72ce52c/php/apache/7.3/Dockerfile
+[apache-7.3]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/blob/cbf32b8fab8ed72ce13551526f1f8be1c7855107/php/apache/7.3/Dockerfile
 [apache-7.2]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/blob/31b8ee0fb796e6c5d43c9f78f6536b77dbbfc04b/php/apache/7.2/Dockerfile
 [apache-7.1]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/blob/31b8ee0fb796e6c5d43c9f78f6536b77dbbfc04b/php/apache/7.1/Dockerfile
 [apache-7.0]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/blob/31b8ee0fb796e6c5d43c9f78f6536b77dbbfc04b/php/apache/7.0/Dockerfile
-[nginx-7.3]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/blob/31b8ee0fb796e6c5d43c9f78f6536b77dbbfc04b/php/nginx/7.3/Dockerfile
+[nginx-7.3]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/blob/cbf32b8fab8ed72ce13551526f1f8be1c7855107/php/nginx/7.3/Dockerfile
 [nginx-7.2]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/blob/31b8ee0fb796e6c5d43c9f78f6536b77dbbfc04b/php/nginx/7.2/Dockerfile
 [nginx-7.1]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/blob/31b8ee0fb796e6c5d43c9f78f6536b77dbbfc04b/php/nginx/7.1/Dockerfile
 [nginx-7.0]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/blob/31b8ee0fb796e6c5d43c9f78f6536b77dbbfc04b/php/nginx/7.0/Dockerfile
