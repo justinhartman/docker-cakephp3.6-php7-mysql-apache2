@@ -43,13 +43,13 @@ RUN apt-get update -q && apt-get install -qqy \
     composer \
     # Installing mod-php installs both recommended PHP 7 and Apache 2.
     libapache2-mod-php7.3 \
-    # Specifying the 7.3 extension explicitly as Docker Hub fails to run
+    # Specifying the 7.3 extensions explicitly as Docker Hub fails to run
     # Composer (later on) without it.
     php7.3-intl \
-    php-mbstring \
-    php-zip \
-    php-xml \
-    php-curl \
+    php7.3-mbstring \
+    php7.3-zip \
+    php7.3-xml \
+    php7.3-curl \
     php-codesniffer \
     # Installing MariaDB 10.1 due to a bug with MySQL 5.7 that prevents it
     # installing when building on Docker Hub. You could change this to
