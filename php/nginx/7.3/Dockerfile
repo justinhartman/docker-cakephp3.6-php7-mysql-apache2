@@ -102,6 +102,9 @@ WORKDIR /var/www/html
 # Post-git installation of application using Composer.
 RUN composer -n install
 
+# Copy the repos .env file, with database connection settings, to the project.
+COPY --chown=www-data:www-data env.default config/.env
+
 # Copy the app.php file
 RUN cp config/app.default.php config/app.php && \
     # Enable dotenv support in bootstrap.php.
@@ -119,9 +122,6 @@ RUN cp config/app.default.php config/app.php && \
     chmod -R +rw logs tmp && \
     # Let Cake change permissions as it needs to.
     composer -n install
-
-# Copy the repos .env file, with database connection settings, to the project.
-COPY --chown=www-data:www-data env.default config/.env
 
 ####################################################
 # Run startup script for Nginx, php-fpm and MySQL. #
