@@ -2,34 +2,46 @@
 ####################
 
 # Create Docker image using -t so it has a friendly name.
-docker build -t sid_apache_7.3_image debian/php/apache/7.3
-docker build -t sid_apache_7.2_image debian/php/apache/7.2
-docker build -t sid_apache_7.1_image debian/php/apache/7.1
-docker build -t sid_apache_7.0_image debian/php/apache/7.0
-docker build -t sid_nginx_7.3_image debian/php/nginx/7.3
-docker build -t sid_nginx_7.2_image debian/php/nginx/7.2
-docker build -t sid_nginx_7.1_image debian/php/nginx/7.1
-docker build -t sid_nginx_7.0_image debian/php/nginx/7.0
+docker build -t sid_apache_php_7.3 apache/php/7.3
+docker build -t sid_apache_php_7.2 apache/php/7.2
+docker build -t sid_apache_php_7.1 apache/php/7.1
+docker build -t sid_apache_php_7.0 apache/php/7.0
+docker build -t sid_apache_fpm_7.3 apache/php-fpm/7.3
+docker build -t sid_apache_fpm_7.2 apache/php-fpm/7.2
+docker build -t sid_apache_fpm_7.1 apache/php-fpm/7.1
+docker build -t sid_apache_fpm_7.0 apache/php-fpm/7.0
+docker build -t sid_nginx_fpm_7.3 nginx/php-fpm/7.3
+docker build -t sid_nginx_fpm_7.2 nginx/php-fpm/7.2
+docker build -t sid_nginx_fpm_7.1 nginx/php-fpm/7.1
+docker build -t sid_nginx_fpm_7.0 nginx/php-fpm/7.0
 # Check where the image is built.
 docker image ls
 # Run the app, mapping your machine’s port 4000 to the container’s port 80.
-docker run -p 80:80 sid_apache_7.3_image
-docker run -p 80:80 sid_apache_7.2_image
-docker run -p 80:80 sid_apache_7.1_image
-docker run -p 80:80 sid_apache_7.0_image
-docker run -p 80:80 sid_nginx_7.3_image
-docker run -p 80:80 sid_nginx_7.2_image
-docker run -p 80:80 sid_nginx_7.1_image
-docker run -p 80:80 sid_nginx_7.0_image
+docker run -p 80:80 sid_apache_php_7.3
+docker run -p 80:80 sid_apache_php_7.2
+docker run -p 80:80 sid_apache_php_7.1
+docker run -p 80:80 sid_apache_php_7.0
+docker run -p 80:80 sid_apache_fpm_7.3
+docker run -p 80:80 sid_apache_fpm_7.2
+docker run -p 80:80 sid_apache_fpm_7.1
+docker run -p 80:80 sid_apache_fpm_7.0
+docker run -p 80:80 sid_nginx_fpm_7.3
+docker run -p 80:80 sid_nginx_fpm_7.2
+docker run -p 80:80 sid_nginx_fpm_7.1
+docker run -p 80:80 sid_nginx_fpm_7.0
 # Run the app in detached mode.
-docker run -d -p 80:80 sid_apache_7.3_image
-docker run -d -p 80:80 sid_apache_7.2_image
-docker run -d -p 80:80 sid_apache_7.1_image
-docker run -d -p 80:80 sid_apache_7.0_image
-docker run -d -p 80:80 sid_nginx_7.3_image
-docker run -d -p 80:80 sid_nginx_7.2_image
-docker run -d -p 80:80 sid_nginx_7.1_image
-docker run -d -p 80:80 sid_nginx_7.0_image
+docker run -d -p 80:80 sid_apache_php_7.3
+docker run -d -p 80:80 sid_apache_php_7.2
+docker run -d -p 80:80 sid_apache_php_7.1
+docker run -d -p 80:80 sid_apache_php_7.0
+docker run -d -p 80:80 sid_apache_fpm_7.3
+docker run -d -p 80:80 sid_apache_fpm_7.2
+docker run -d -p 80:80 sid_apache_fpm_7.1
+docker run -d -p 80:80 sid_apache_fpm_7.0
+docker run -d -p 80:80 sid_nginx_fpm_7.3
+docker run -d -p 80:80 sid_nginx_fpm_7.2
+docker run -d -p 80:80 sid_nginx_fpm_7.1
+docker run -d -p 80:80 sid_nginx_fpm_7.0
 # Stop the container process.
 docker image ls
 docker container stop CONTAINER_ID
@@ -40,15 +52,15 @@ docker container stop CONTAINER_ID
 # Login to Docker.
 docker login
 # Tag the image (docker tag image_name username/repository:tag).
-docker tag sid_apache_7.2_image justinhartman/cakephp3.5-php7-mysql-apache2:latest
-docker tag sid_apache_7.2_image justinhartman/cakephp3.5-php7-mysql-apache2:apache-7.2
-docker tag sid_apache_7.2_image justinhartman/cakephp3.5-php7-mysql-apache2:apache-php-7.2
-docker tag sid_apache_7.0_image justinhartman/cakephp3.5-php7-mysql-apache2:apache-7.0
-docker tag sid_apache_7.0_image justinhartman/cakephp3.5-php7-mysql-apache2:apache-php-7.0
-docker tag sid_nginx_7.2_image justinhartman/cakephp3.5-php7-mysql-apache2:nginx-7.2
-docker tag sid_nginx_7.2_image justinhartman/cakephp3.5-php7-mysql-apache2:nginx-php-7.2
-docker tag sid_nginx_7.0_image justinhartman/cakephp3.5-php7-mysql-apache2:nginx-7.0
-docker tag sid_nginx_7.0_image justinhartman/cakephp3.5-php7-mysql-apache2:nginx-php-7.0
+docker tag sid_apache_php_7.2 justinhartman/cakephp3.5-php7-mysql-apache2:latest
+docker tag sid_apache_php_7.2 justinhartman/cakephp3.5-php7-mysql-apache2:apache-7.2
+docker tag sid_apache_php_7.2 justinhartman/cakephp3.5-php7-mysql-apache2:apache-php-7.2
+docker tag sid_apache_php_7.0 justinhartman/cakephp3.5-php7-mysql-apache2:apache-7.0
+docker tag sid_apache_php_7.0 justinhartman/cakephp3.5-php7-mysql-apache2:apache-php-7.0
+docker tag sid_nginx_fpm_7.2 justinhartman/cakephp3.5-php7-mysql-apache2:nginx-7.2
+docker tag sid_nginx_fpm_7.2 justinhartman/cakephp3.5-php7-mysql-apache2:nginx-php-7.2
+docker tag sid_nginx_fpm_7.0 justinhartman/cakephp3.5-php7-mysql-apache2:nginx-7.0
+docker tag sid_nginx_fpm_7.0 justinhartman/cakephp3.5-php7-mysql-apache2:nginx-php-7.0
 # See list of tagged images.
 docker image ls
 # Publish and Upload your tagged image to the repository.
@@ -105,7 +117,7 @@ docker-compose down --volumes
 # Specify an alternate compose file.
 docker-compose up -f docker-compose.debug.yml
 # Use -p to specify a project name
-docker-compose up -p sid_apache_7.3_image
+docker-compose up -p sid_apache_php_7.3
 # Pull a specific build item from the file
 docker-compose -f php/apache/7.2/docker-compose.yml pull db
 
