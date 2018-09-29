@@ -10,6 +10,8 @@ versus MySQL_ note below on why MariaDB was chosen over MySQL).
 - [Installation](#installation)
 - [Supported Tags and respective `Dockerfile` links](#supported-tags-and-respective-dockerfile-links)
     - [Apache PHP 7](#apache-php-7)
+        - [mod_php](#mod_php)
+        - [php-fpm](#php-fpm)
     - [Nginx PHP-FPM 7](#nginx-php-fpm-7)
 - [Modifying CakePHP Settings](#modifying-cakephp-settings)
 - [MariaDB versus MySQL](#mariadb-versus-mysql)
@@ -43,13 +45,27 @@ container.
 
 ### Apache PHP 7
 
-- `apache-php-7.3.0`, `apache-php-7.3`, `apache-7.3` [(php/apache/7.3/Dockerfile)][apache-7.3]
-- `apache-php-7.2.9`, `apache-php-7.2`, `apache-7.2`, `latest` [(php/apache/7.2/Dockerfile)][apache-7.2]
-- `apache-php-7.1.20`, `apache-php-7.1`, `apache-7.1` [(php/apache/7.1/Dockerfile)][apache-7.1]
-- `apache-php-7.0.31`, `apache-php-7.0`, `apache-7.0` [(php/apache/7.0/Dockerfile)][apache-7.0]
+You have two options when installing PHP with Apache 2.4. These are the built in
+Apache 2 PHP module (`mod_php`) or the stand-alone FastCGI PHP server
+(`php-fpm`). You can install either `mod_php` or `php-fpm` by selecting one of
+the tags below.
 
-The containers also come with the following additional software versions
-installed:
+#### mod_php
+
+- `apache-php-7.3.0`, `apache-php-7.3`, `apache-7.3` [(apache/php/7.3/Dockerfile)][apache-7.3]
+- `apache-php-7.2.9`, `apache-php-7.2`, `apache-7.2`, `latest` [(apache/php/7.2/Dockerfile)][apache-7.2]
+- `apache-php-7.1.20`, `apache-php-7.1`, `apache-7.1` [(apache/php/7.1/Dockerfile)][apache-7.1]
+- `apache-php-7.0.31`, `apache-php-7.0`, `apache-7.0` [(apache/php/7.0/Dockerfile)][apache-7.0]
+
+#### php-fpm
+
+- `apache-fpm-7.3.0`, `apache-fpm-7.3` [(apache/php-fpm/7.3/Dockerfile)][apache-fpm-7.3]
+- `apache-fpm-7.2.9`, `apache-fpm-7.2` [(apache/php-fpm/7.2/Dockerfile)][apache-fpm-7.2]
+- `apache-fpm-7.1.20`, `apache-fpm-7.1` [(apache/php-fpm/7.1/Dockerfile)][apache-fpm-7.1]
+- `apache-fpm-7.0.31`, `apache-fpm-7.0` [(apache/php-fpm/7.0/Dockerfile)][apache-fpm-7.0]
+
+The `mod_php` and `php-fpm` Docker containers also come with the following
+additional software installed:
 
 1. CakePHP 3.6.11
 1. Apache 2.4.34
@@ -57,12 +73,15 @@ installed:
 
 ### Nginx PHP-FPM 7
 
-- `nginx-php-7.3.0`, `nginx-php-7.3`, `nginx-7.3` [(php/nginx/7.3/Dockerfile)][nginx-7.3]
-- `nginx-php-7.2.9`, `nginx-php-7.2`, `nginx-7.2` [(php/nginx/7.2/Dockerfile)][nginx-7.2]
-- `nginx-php-7.1.20`, `nginx-php-7.1`, `nginx-7.1` [(php/nginx/7.1/Dockerfile)][nginx-7.1]
-- `nginx-php-7.0.31`, `nginx-php-7.0`, `nginx-7.0` [(php/nginx/7.0/Dockerfile)][nginx-7.0]
+By default the Nginx Docker containers all run on the stand-alone FastCGI PHP
+server (`php-fpm`) and are pre-configured with this deployment of PHP.
 
-The containers also come with the following additional software versions
+- `nginx-fpm-7.3.0`, `nginx-fpm-7.3`, `nginx-7.3` [(php/nginx/7.3/Dockerfile)][nginx-7.3]
+- `nginx-fpm-7.2.9`, `nginx-fpm-7.2`, `nginx-7.2` [(php/nginx/7.2/Dockerfile)][nginx-7.2]
+- `nginx-fpm-7.1.20`, `nginx-fpm-7.1`, `nginx-7.1` [(php/nginx/7.1/Dockerfile)][nginx-7.1]
+- `nginx-fpm-7.0.31`, `nginx-fpm-7.0`, `nginx-7.0` [(php/nginx/7.0/Dockerfile)][nginx-7.0]
+
+The `nginx` containers also come with the following additional software
 installed:
 
 1. CakePHP 3.6.11
@@ -159,11 +178,15 @@ concepts of Ruby on Rails, and distributed under the MIT License.
 [justinhartman]: https://github.com/justinhartman
 [issues]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/issues
 [releases]: https://github.com/docker/docker-ce/releases/latest
-[apache-7.3]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/blob/cbf32b8fab8ed72ce13551526f1f8be1c7855107/php/apache/7.3/Dockerfile
-[apache-7.2]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/blob/31b8ee0fb796e6c5d43c9f78f6536b77dbbfc04b/php/apache/7.2/Dockerfile
-[apache-7.1]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/blob/31b8ee0fb796e6c5d43c9f78f6536b77dbbfc04b/php/apache/7.1/Dockerfile
-[apache-7.0]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/blob/31b8ee0fb796e6c5d43c9f78f6536b77dbbfc04b/php/apache/7.0/Dockerfile
-[nginx-7.3]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/blob/cbf32b8fab8ed72ce13551526f1f8be1c7855107/php/nginx/7.3/Dockerfile
-[nginx-7.2]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/blob/31b8ee0fb796e6c5d43c9f78f6536b77dbbfc04b/php/nginx/7.2/Dockerfile
-[nginx-7.1]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/blob/31b8ee0fb796e6c5d43c9f78f6536b77dbbfc04b/php/nginx/7.1/Dockerfile
-[nginx-7.0]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/blob/31b8ee0fb796e6c5d43c9f78f6536b77dbbfc04b/php/nginx/7.0/Dockerfile
+[apache-7.3]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/blob/739aa5c2c4568c93e4fcfb3c66e3671ecb19b87e/apache/php/7.3/Dockerfile
+[apache-7.2]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/blob/739aa5c2c4568c93e4fcfb3c66e3671ecb19b87e/apache/php/7.2/Dockerfile
+[apache-7.1]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/blob/739aa5c2c4568c93e4fcfb3c66e3671ecb19b87e/apache/php/7.1/Dockerfile
+[apache-7.0]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/blob/739aa5c2c4568c93e4fcfb3c66e3671ecb19b87e/apache/php/7.0/Dockerfile
+[apache-fpm-7.3]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/blob/739aa5c2c4568c93e4fcfb3c66e3671ecb19b87e/apache/php-fpm/7.3/Dockerfile
+[apache-fpm-7.2]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/blob/739aa5c2c4568c93e4fcfb3c66e3671ecb19b87e/apache/php-fpm/7.2/Dockerfile
+[apache-fpm-7.1]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/blob/739aa5c2c4568c93e4fcfb3c66e3671ecb19b87e/apache/php-fpm/7.1/Dockerfile
+[apache-fpm-7.0]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/blob/739aa5c2c4568c93e4fcfb3c66e3671ecb19b87e/apache/php-fpm/7.0/Dockerfile
+[nginx-7.3]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/blob/739aa5c2c4568c93e4fcfb3c66e3671ecb19b87e/nginx/php-fpm/7.3/Dockerfile
+[nginx-7.2]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/blob/739aa5c2c4568c93e4fcfb3c66e3671ecb19b87e/nginx/php-fpm/7.2/Dockerfile
+[nginx-7.1]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/blob/739aa5c2c4568c93e4fcfb3c66e3671ecb19b87e/nginx/php-fpm/7.1/Dockerfile
+[nginx-7.0]: https://github.com/justinhartman/docker-cakephp3.6-php7-mysql-apache2/blob/739aa5c2c4568c93e4fcfb3c66e3671ecb19b87e/nginx/php-fpm/7.0/Dockerfile
