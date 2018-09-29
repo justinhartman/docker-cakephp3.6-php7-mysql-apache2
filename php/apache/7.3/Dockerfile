@@ -101,13 +101,13 @@ RUN composer -n install
 # Copy the app.php file
 RUN cp config/app.default.php config/app.php && \
     # Enable dotenv support in bootstrap.php.
-    sed -i "52s/\/\///" config/bootstrap.php && \
-    sed -i "53s/\/\///" config/bootstrap.php && \
-    sed -i "54s/\/\///" config/bootstrap.php && \
-    sed -i "55s/\/\///" config/bootstrap.php && \
     sed -i "56s/\/\///" config/bootstrap.php && \
     sed -i "57s/\/\///" config/bootstrap.php && \
     sed -i "58s/\/\///" config/bootstrap.php && \
+    sed -i "59s/\/\///" config/bootstrap.php && \
+    sed -i "60s/\/\///" config/bootstrap.php && \
+    sed -i "61s/\/\///" config/bootstrap.php && \
+    sed -i "62s/\/\///" config/bootstrap.php && \
     # Make Session Handler configurable via dotenv.
     sed -i -e "s/'php',/env('SESSION_DEFAULTS', 'php'),/" config/app.php && \
     # Set owner and write permissions for files and folders.
