@@ -72,7 +72,7 @@ RUN service mysql start && mysql -u root < /etc/mysql/database.sql
 ################################################################
 
 # Copy default vhost to Apache config folder.
-COPY apache_default /etc/apache2/sites-available/000-default.conf
+COPY vhost.conf /etc/apache2/sites-available/000-default.conf
 
 # Enable mod_rewrite and add ServerName directive to Apache conf file.
 RUN a2enmod rewrite && \

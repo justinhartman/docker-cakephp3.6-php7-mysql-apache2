@@ -78,7 +78,7 @@ RUN service mysql start && mysql -u root < /etc/mysql/database.sql
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
 
 # Copy default vhost to Apache config folder.
-COPY nginx_default /etc/nginx/sites-available/localhost
+COPY vhost.conf /etc/nginx/sites-available/localhost.conf
 
 # Enable the nginx vhost.
 RUN rm /etc/nginx/sites-enabled/default && \
