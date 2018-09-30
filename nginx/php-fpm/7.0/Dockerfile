@@ -80,7 +80,7 @@ COPY vhost.conf /etc/nginx/sites-available/localhost.conf
 
 # Enable the nginx vhost.
 RUN rm /etc/nginx/sites-enabled/default && \
-    ln -s /etc/nginx/sites-available/localhost /etc/nginx/sites-enabled/ && \
+    ln -s /etc/nginx/sites-available/localhost.conf /etc/nginx/sites-enabled/ && \
     service nginx reload
 
 ################################################################
