@@ -49,12 +49,17 @@ RUN apt-get update -q && apt-get install -qqy \
     php-zip \
     php-xml \
     php-curl \
+    php7.1-intl \
+    php7.1-mbstring \
+    php7.1-zip \
+    php7.1-xml \
+    php7.1-curl \
     php-codesniffer \
     # Installing MariaDB 10.1 due to a bug with MySQL 5.7 that prevents it
     # installing when building on Docker Hub. You could change this to
     # mysql-server if you really need MySQL 5.7.
     mariadb-server \
-    php-mysql && \
+    php7.1-mysql && \
     # Purge the apt list software to save space.
     rm -rf /var/lib/apt/lists/*
 
@@ -130,6 +135,10 @@ RUN cp config/app.default.php config/app.php && \
 ####################################################
 # Run startup script for Apache and MySQL.         #
 ####################################################
+
+# Tail the Apache Error and Access Logs to the console.
+RUN ln -sf /dev/stdout /var/log/apache2/access.log && \
+    ln -sf /dev/stderr /var/log/apache2/error.log
 
 # Define ports 80 and 3306.
 EXPOSE 80 3306

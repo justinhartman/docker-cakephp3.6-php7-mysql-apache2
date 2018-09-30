@@ -44,6 +44,11 @@ RUN apt-get update -q && apt-get install -qqy \
     # Installing Apache and PHP-FPM
     apache2 \
     php7.0-fpm \
+    php-intl \
+    php-mbstring \
+    php-zip \
+    php-xml \
+    php-curl \
     php7.0-intl \
     php7.0-mbstring \
     php7.0-zip \
@@ -54,7 +59,7 @@ RUN apt-get update -q && apt-get install -qqy \
     # installing when building on Docker Hub. You could change this to
     # mysql-server if you really need MySQL 5.7.
     mariadb-server \
-    php-mysql && \
+    php7.0-mysql && \
     # Purge the apt list software to save space.
     rm -rf /var/lib/apt/lists/*
 
@@ -130,6 +135,10 @@ RUN cp config/app.default.php config/app.php && \
 ####################################################
 # Run startup script for Apache and MySQL.         #
 ####################################################
+
+# Tail the Apache Error and Access Logs to the console.
+RUN ln -sf /dev/stdout /var/log/apache2/access.log && \
+    ln -sf /dev/stderr /var/log/apache2/error.log
 
 # Define ports 80 and 3306.
 EXPOSE 80 3306
